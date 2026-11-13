@@ -25,6 +25,7 @@
 <meta name="twitter:image" content="https://openmode.ai/og.png">
 
 <link rel="preload" href="fonts/newsreader-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="img/apollo-11-poster.jpg" as="image">
 <link rel="stylesheet" href="styles.css">
 
 <script type="application/ld+json">
@@ -43,13 +44,26 @@
   "license": "https://opensource.org/licenses/MIT",
   "isAccessibleForFree": true,
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-  "sameAs": "https://github.com/shansabnani/openmode",
-  "downloadUrl": "https://github.com/shansabnani/openmode",
+  "sameAs": ["https://github.com/shansabnani/openmode", "https://www.npmjs.com/package/openmode"],
+  "downloadUrl": "https://www.npmjs.com/package/openmode",
   "featureList": [
     "look: contact sheet with timestamps plus length, size, loudness, silent stretches, black frames and missing frames",
     "render: an edit file or a folder of numbered frames to MP4, draft or final",
     "versions: save, list, restore and diff the film folder",
     "MCP server with six tools for Claude Code, Codex, Cursor and other clients"
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "What can an agent do with openmode?", "acceptedAnswer": { "@type": "Answer", "text": "Look at a video, trim and join clips, change speed, add fades, captions, music and an end card, turn a folder of frames into a video, and render an MP4 at up to 4K. It also saves every version." } },
+    { "@type": "Question", "name": "Which agents does openmode work with?", "acceptedAnswer": { "@type": "Answer", "text": "Any agent that can use MCP or run a command: Claude Code, Codex, Cursor and others." } },
+    { "@type": "Question", "name": "What does openmode cost?", "acceptedAnswer": { "@type": "Answer", "text": "Nothing. It runs on your own computer with your own ffmpeg, so there is no account, no upload and no API key." } },
+    { "@type": "Question", "name": "What do I need to run openmode?", "acceptedAnswer": { "@type": "Answer", "text": "Node.js 20 or newer and ffmpeg." } },
+    { "@type": "Question", "name": "How do I contribute to openmode?", "acceptedAnswer": { "@type": "Answer", "text": "Star the repo, open an issue, or add an engine. CONTRIBUTING.md in the GitHub repository shows how. A Blender engine is on the roadmap." } }
   ]
 }
 </script>
@@ -60,8 +74,8 @@
 <header class="top">
   <a class="wordmark" href="/">openmode</a>
   <nav aria-label="Site">
-    <span class="eyebrow quiet">0.1.0 · MIT</span>
     <a class="eyebrow" href="https://github.com/shansabnani/openmode">GitHub</a>
+    <a class="copy primary cta" href="#install" data-copy-active="install">Copy install<span class="wide"> command</span></a>
   </nav>
 </header>
 
@@ -69,12 +83,12 @@
 
 <div class="hero">
   <div class="pitch">
-    <p class="eyebrow">Open source · CLI and MCP server</p>
+    <p class="eyebrow">Open source · Free · Runs on your machine</p>
     <h1>Video editing and rendering for coding agents.</h1>
-    <p class="lede">openmode lets Claude Code, Codex and Cursor edit video the way they edit code: look at the footage, write a small edit file, render it, and keep every version.</p>
+    <p class="lede">Ask Claude Code, Codex or Cursor to cut, caption and render your video. openmode gives them the tools.</p>
   </div>
 
-  <div class="install">
+  <div class="install" id="install">
       <input type="radio" name="client" id="tab-claude" checked>
       <input type="radio" name="client" id="tab-codex">
       <input type="radio" name="client" id="tab-other">
@@ -113,169 +127,127 @@
   </div>
 
   <figure class="proof shot">
-    <div class="proof-head">
-      <p class="eyebrow">What the agent sees</p>
-      <code class="cmd">openmode look footage/take.mp4</code>
-    </div>
-    <img src="img/look-sheet.jpg" width="1536" height="648" fetchpriority="high"
-         alt="Contact sheet of twelve timestamped frames from a 16-second black-and-white test clip. The fifth tile, at 0:06, is black.">
-    <pre class="out"><span>Sheet: …/demo/sheet.jpg (4x3 tiles)</span><span>Video: 16s, 1920x1080, 30 fps, h264, 15.6 MB</span><span>Loudness: -28.1 LUFS, peak -23.3 dBFS</span><span><mark>Silences: 5-7s</mark></span><span><mark>Black: 5-6.5s</mark></span><span>Tiles: 0:00.7  0:02.0  0:03.3  0:04.7  0:06.0  0:07.3  0:08.7  0:10.0  0:11.3  0:12.7  0:14.0  0:15.3</span></pre>
-    <figcaption>Real output, on a 16-second test clip made with ffmpeg’s built-in sources. The black tile at 0:06 is the stretch the facts report.</figcaption>
+    <video controls playsinline preload="none" poster="img/apollo-11-poster.jpg" width="720" height="720"
+           aria-label="A 35-second Apollo 11 trailer: the Saturn V on the pad during the countdown, liftoff, then an astronaut on the ladder and the flag on the Moon, with captions.">
+      <source src="video/apollo-11.mp4" type="video/mp4">
+    </video>
+    <figcaption>Claude cut this from NASA’s Apollo 11 footage with openmode. <a href="https://github.com/shansabnani/openmode/tree/main/examples/apollo-11">See the edit file.</a></figcaption>
   </figure>
 </div>
 
-<section aria-labelledby="abilities">
+<section aria-labelledby="how">
   <div class="section-head">
-    <p class="eyebrow" id="abilities">What it gives an agent</p>
-    <p class="note" style="margin:0">Below, <code>openmode</code> is short for <code>npx -y openmode</code>.</p>
+    <p class="eyebrow" id="how">How it works</p>
   </div>
-  <div class="columns">
-    <article>
-      <p class="eyebrow quiet">look</p>
-      <h2>One image and a few numbers.</h2>
-      <p>Agents cannot watch video. A contact sheet with timestamps, plus length, loudness, silent stretches and black frames, lets them check footage and their own renders.</p>
-      <div class="run">
-        <code class="cmd">openmode look renders/cut-draft.mp4</code>
-        <pre class="out"><span>Sheet: …/demo/draft-sheet.jpg (6x2 tiles)</span><span>Video: 11.83s, 360x640, 30 fps, h264, 1.1 MB</span><span>Loudness: -13.7 LUFS, peak -11.9 dBFS</span><span>Tiles: 0:00.5  0:01.5  0:02.5  0:03.5  0:04.4  0:05.4  0:06.4  0:07.4  0:08.4  0:09.4  0:10.4  0:11.3</span></pre>
+  <div class="steps">
+    <article class="step">
+      <div class="text">
+        <p class="eyebrow quiet">1 · Look</p>
+        <h2>The agent sees your footage.</h2>
+        <p>One image of timestamped frames, plus the length, loudness and silent stretches.</p>
       </div>
-    </article>
-    <article>
-      <p class="eyebrow quiet">render</p>
-      <h2>An edit file in, an MP4 out.</h2>
-      <p>Clips, trims, speed, captions and music, or a folder of numbered frames. Draft in about a second, final at up to 4K. A typo is an error that names the field.</p>
-      <div class="run">
-        <code class="cmd">openmode render cut.json --draft</code>
-        <pre class="out"><span>…/demo/renders/cut-draft.mp4</span><span>draft: 11.83s, 360x640, 30 fps, 1.1 MB, with sound</span><span>Rendered in 1.48s (h264_videotoolbox)</span></pre>
-      </div>
-      <div class="run">
-        <code class="cmd">openmode check typo.json</code>
-        <pre class="out"><span>clips[1]: Unrecognized key: "sped"</span></pre>
-      </div>
-    </article>
-    <article>
-      <p class="eyebrow quiet">versions</p>
-      <h2>An undo for video.</h2>
-      <p>Each save keeps the whole film folder with a message and the prompt behind it. Restoring never loses work: the restore is itself a new version.</p>
-      <div class="run">
-        <code class="cmd">openmode restore v1</code>
-        <pre class="out"><span>Restored v1 as v3 (1 files written, 0 removed).</span></pre>
-      </div>
-      <div class="run">
-        <code class="cmd">openmode versions</code>
-        <pre class="out"><span>v1    2026-11-13 11:22  first cut</span><span>v2    2026-11-13 11:22  faster middle shot</span><span>v3    2026-11-13 11:22  Restore v1: first cut</span></pre>
-      </div>
-    </article>
-  </div>
-</section>
-
-<section aria-labelledby="demo">
-  <div class="section-head">
-    <p class="eyebrow" id="demo">Made with it</p>
-    <p class="note" style="margin:0">Footage and sound: NASA.</p>
-  </div>
-  <div class="demo">
-    <figure class="proof">
-      <video controls playsinline preload="none" poster="img/apollo-11-poster.jpg" width="720" height="720"
-             aria-label="A 35-second Apollo 11 trailer: the Saturn V on the pad during the countdown, liftoff, then an astronaut on the ladder and the flag on the Moon, with captions.">
-        <source src="video/apollo-11.mp4" type="video/mp4">
-      </video>
-      <figcaption>Cut by Claude with the three commands on this page. The edit files are in <a href="https://github.com/shansabnani/openmode/tree/main/examples/apollo-11">examples/apollo-11</a>.</figcaption>
-    </figure>
-    <div class="text">
-      <h2>Apollo 11 in 35 seconds, cut by an agent.</h2>
-      <p>NASA’s 70mm launch film is silent and in slow motion. The agent looked at it, took the countdown from a second NASA film, ran the launch at 2× so the rocket rises on the word “liftoff”, and captioned every line.</p>
-      <div class="run">
+      <figure class="proof">
         <code class="cmd">openmode look footage/launch.mp4</code>
-        <pre class="out"><span>Sheet: …/sheets/launch.jpg (5x5 tiles)</span><span>Video: 84.21s, 1812x1812, 24 fps, h264, 54.1 MB</span><span>No sound.</span></pre>
+        <img src="img/apollo-look.jpg" width="1530" height="612" loading="lazy"
+             alt="Contact sheet of ten timestamped frames from NASA's Apollo 11 launch film: the Saturn V on the pad, the engines lighting, and the rocket rising.">
+        <pre class="out"><span>Video: 84.21s, 1812x1812, 24 fps, h264, 54.1 MB</span><span>No sound.</span></pre>
+      </figure>
+    </article>
+    <article class="step">
+      <div class="text">
+        <p class="eyebrow quiet">2 · Render</p>
+        <h2>It writes the edit as a small file.</h2>
+        <p>Clips, trims, speed, captions and music go in. An MP4 comes out, as a draft in seconds or a final at up to 4K.</p>
       </div>
-      <div class="run">
-        <code class="cmd">openmode render apollo.json --final</code>
-        <pre class="out"><span>final: 35.2s, 1080x1080, 30 fps, 11.6 MB, with sound</span><span>Rendered in 4.61s (h264_videotoolbox)</span></pre>
+      <div class="proof">
+        <div class="file">
+          <div class="file-head">
+            <code class="cmd">apollo.json, shortened</code>
+          </div>
+          <pre>{
+  "version": 1,
+  "format": "1:1",
+  "clips": [
+    { "src": "footage/launch.mp4", "start": 20.2, "end": 54.4, "speed": 2 }
+  ],
+  "captions": [
+    { "start": 14.38, "end": 17.32, "text": "Liftoff. We have a liftoff." }
+  ],
+  "endCard": "Cut by Claude with openmode.ai"
+}</pre>
+        </div>
+        <div class="run">
+          <code class="cmd">openmode render apollo.json --final</code>
+          <pre class="out"><span>final: 35.2s, 1080x1080, 30 fps, 11.6 MB, with sound</span><span>Rendered in 4.61s (h264_videotoolbox)</span></pre>
+        </div>
       </div>
-      <div class="run">
+    </article>
+    <article class="step">
+      <div class="text">
+        <p class="eyebrow quiet">3 · Versions</p>
+        <h2>Every version is kept.</h2>
+        <p>Save, compare and go back. It is undo for video.</p>
+      </div>
+      <div class="proof">
         <code class="cmd">openmode versions</code>
         <pre class="out"><span>v1    2026-11-13 17:49  first draft: countdown, liftoff, flag on the Moon</span><span>v2    2026-11-13 17:50  liftoff lands on the word; ladder shot before the flag; quieter mix</span><span>v3    2026-11-13 17:50  vertical version: ladder shot replaces the flag, which the 9:16 crop cut off</span></pre>
       </div>
-    </div>
-  </div>
-</section>
-
-<section aria-labelledby="edit-file">
-  <div class="section-head">
-    <p class="eyebrow" id="edit-file">The edit file</p>
-  </div>
-  <div class="edit">
-    <div class="file">
-      <div class="file-head">
-        <code class="cmd">cut.json</code>
-        <button class="copy" type="button" data-copy="edit-json">Copy</button>
-      </div>
-      <pre id="edit-json">{
-  "version": 1,
-  "format": "9:16",
-  "fit": "cover",
-  "clips": [
-    {
-      "src": "footage/take.mp4",
-      "start": 0.5, "end": 4.85,
-      "caption": "Shot one, trimmed."
-    },
-    {
-      "src": "footage/take.mp4",
-      "start": 7.15, "end": 11.5,
-      "speed": 1.25
-    },
-    {
-      "src": "footage/take.mp4",
-      "start": 11.5, "end": 15.5
-    }
-  ],
-  "captions": [
-    {
-      "start": 4.6, "end": 7.6,
-      "text": "The dead air is gone."
-    }
-  ],
-  "endCard": "openmode.ai",
-  "loudness": -14
-}</pre>
-    </div>
-    <div class="text">
-      <h2>A small JSON file next to the footage.</h2>
-      <p>Paths are relative to the file, times are in seconds. This one keeps three stretches of the test clip, skips the silent, black one, runs the middle shot at 1.25×, crops to vertical, and adds captions and an end card.</p>
-      <figure class="proof">
-        <div class="run">
-          <code class="cmd">openmode render cut.json --final</code>
-          <pre class="out"><span>…/demo/renders/cut-final.mp4</span><span>final: 11.83s, 1080x1920, 30 fps, 21.1 MB, with sound</span><span>Rendered in 2.45s (h264_videotoolbox)</span></pre>
-        </div>
-        <img src="img/cut-final-strip.jpg" width="1152" height="682"
-             alt="Three timestamped vertical frames from the rendered film: the first two carry the captions from the edit file, the third shows the end card openmode.ai.">
-        <figcaption>Three frames of the result, from <code>openmode look renders/cut-final.mp4 --frames 3</code>.</figcaption>
-      </figure>
-    </div>
+    </article>
   </div>
 </section>
 
 <section aria-labelledby="mcp-tools">
   <div class="section-head">
-    <p class="eyebrow" id="mcp-tools">MCP tools</p>
+    <p class="eyebrow" id="mcp-tools">Six MCP tools</p>
   </div>
   <div class="tools">
     <table>
       <tbody>
-        <tr><th scope="row">look</th><td>See a video, image or frames folder: contact sheet image and facts.</td></tr>
-        <tr><th scope="row">render_edit</th><td>Render an edit file or inline edit to MP4, or check it without rendering.</td></tr>
-        <tr><th scope="row">render_frames</th><td>Join numbered frames and a soundtrack into an MP4.</td></tr>
-        <tr><th scope="row">versions</th><td>Save, list, restore, diff.</td></tr>
-        <tr><th scope="row">edit_schema</th><td>The edit format with an example.</td></tr>
-        <tr><th scope="row">status</th><td>Check ffmpeg and which features work on this machine.</td></tr>
+        <tr><th scope="row">look</th><td>See a video as one image, with its facts.</td></tr>
+        <tr><th scope="row">render_edit</th><td>Turn an edit file into an MP4.</td></tr>
+        <tr><th scope="row">render_frames</th><td>Turn numbered frames and sound into an MP4.</td></tr>
+        <tr><th scope="row">versions</th><td>Save, list, restore and compare.</td></tr>
+        <tr><th scope="row">edit_schema</th><td>The edit file format, with an example.</td></tr>
+        <tr><th scope="row">status</th><td>Check that ffmpeg is ready.</td></tr>
       </tbody>
     </table>
     <div class="get">
-      <p class="big">Open source, MIT.</p>
-      <p>It runs on your own machine with your own ffmpeg. No account, no upload, no API key, no cost.</p>
-      <p><a href="https://github.com/shansabnani/openmode">github.com/shansabnani/openmode</a></p>
+      <p class="big">Free and open source.</p>
+      <p>No account, no upload, no API key. MIT licence.</p>
+      <ul class="links">
+        <li><a href="https://github.com/shansabnani/openmode">Star it on GitHub</a></li>
+        <li><a href="https://github.com/shansabnani/openmode/blob/main/CONTRIBUTING.md">Contribute an engine</a></li>
+        <li><a href="https://github.com/shansabnani/openmode/issues">Ask for a feature</a></li>
+      </ul>
     </div>
+  </div>
+</section>
+
+<section aria-labelledby="faq">
+  <div class="section-head">
+    <p class="eyebrow" id="faq">Questions</p>
+  </div>
+  <div class="faq">
+    <details>
+      <summary>What can an agent do with it?</summary>
+      <p>Look at a video, trim and join clips, change speed, add fades, captions, music and an end card, turn a folder of frames into a video, and render an MP4 at up to 4K. It also saves every version.</p>
+    </details>
+    <details>
+      <summary>Which agents does it work with?</summary>
+      <p>Any agent that can use MCP or run a command: Claude Code, Codex, Cursor and others.</p>
+    </details>
+    <details>
+      <summary>What does it cost?</summary>
+      <p>Nothing. It runs on your own computer with your own ffmpeg, so there is no account, no upload and no API key.</p>
+    </details>
+    <details>
+      <summary>What do I need?</summary>
+      <p>Node.js 20 or newer and ffmpeg.</p>
+    </details>
+    <details>
+      <summary>How do I contribute?</summary>
+      <p>Star the repo, open an issue, or add an engine. <a href="https://github.com/shansabnani/openmode/blob/main/CONTRIBUTING.md">CONTRIBUTING.md</a> shows how. A Blender engine is on the roadmap.</p>
+    </details>
   </div>
 </section>
 
@@ -286,6 +258,7 @@
   <nav aria-label="Links">
     <a class="eyebrow" href="https://github.com/shansabnani/openmode#readme">Docs</a>
     <a class="eyebrow" href="https://github.com/shansabnani/openmode">GitHub</a>
+    <a class="eyebrow" href="https://www.npmjs.com/package/openmode">npm</a>
     <a class="eyebrow" href="llms.txt">llms.txt</a>
   </nav>
 </footer>

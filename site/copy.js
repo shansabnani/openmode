@@ -1,4 +1,4 @@
-// Copy buttons. Each button names the element whose text it copies.
+// Copy buttons.
 (function () {
   function fallbackCopy(text) {
     var area = document.createElement("textarea");
@@ -27,23 +27,35 @@
     return fallbackCopy(text);
   }
 
-  document.querySelectorAll("button[data-copy]").forEach(function (button) {
-    var label = button.textContent;
+  // A control either names the element it copies (data-copy) or copies the
+  // install command of whichever client tab is selected (data-copy-active).
+  function sourceFor(control) {
+    if (control.hasAttribute("data-copy")) {
+      return document.getElementById(control.getAttribute("data-copy"));
+    }
+    var box = document.getElementById(control.getAttribute("data-copy-active"));
+    var picked = box && box.querySelector('input[type="radio"]:checked');
+    return picked ? document.getElementById(picked.id.replace("tab-", "cmd-")) : null;
+  }
+
+  document.querySelectorAll("[data-copy], [data-copy-active]").forEach(function (control) {
+    var label = control.innerHTML;
     var timer;
-    button.addEventListener("click", function () {
-      var source = document.getElementById(button.getAttribute("data-copy"));
+    control.addEventListener("click", function (event) {
+      var source = sourceFor(control);
       if (!source) return;
+      event.preventDefault();
       copyText(source.textContent).then(
         function () {
-          button.textContent = "Copied";
+          control.textContent = "Copied";
         },
         function () {
-          button.textContent = "Select it";
+          control.textContent = "Select it";
         },
       ).then(function () {
         clearTimeout(timer);
         timer = setTimeout(function () {
-          button.textContent = label;
+          control.innerHTML = label;
         }, 1600);
       });
     });
