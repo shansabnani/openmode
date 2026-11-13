@@ -4,3 +4,6 @@ dist
 *.tgz
 .DS_Store
 tmp
+
+# Third-party reference text used while designing the site; kept local, see design/README.md
+design/monocle-refero.md
