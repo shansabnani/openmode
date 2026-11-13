@@ -458,6 +458,29 @@ h2 {
   max-width: 34em;
 }
 
+/* A film made with it: the video beside the commands that made it. */
+.demo {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: 56px;
+  align-items: start;
+}
+.demo video {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  background: var(--ink);
+  border: 1px solid var(--ink);
+}
+.demo .text p {
+  margin-bottom: 20px;
+  max-width: 34em;
+}
+.demo .run:first-of-type {
+  margin-top: 0;
+}
+
 /* MCP tools: a plain ruled list. */
 .tools {
   display: grid;
@@ -531,6 +554,7 @@ footer a:hover {
   }
   .hero,
   .edit,
+  .demo,
   .tools {
     grid-template-columns: minmax(0, 1fr);
     gap: 36px;

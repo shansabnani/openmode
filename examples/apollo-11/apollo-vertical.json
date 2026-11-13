@@ -1,0 +1,163 @@
+{
+  "version": 1,
+  "format": "9:16",
+  "resolution": "1080p",
+  "fps": 30,
+  "fit": "cover",
+  "clips": [
+    {
+      "src": "https://images-assets.nasa.gov/video/KSC_69-71212-sRGB/KSC_69-71212-sRGB~orig.mp4",
+      "start": 4.0,
+      "end": 8.4
+    },
+    {
+      "src": "https://images-assets.nasa.gov/video/KSC_69-71212-sRGB/KSC_69-71212-sRGB~orig.mp4",
+      "start": 20.2,
+      "end": 54.4,
+      "speed": 2,
+      "transition": "fade",
+      "transitionDuration": 0.6
+    },
+    {
+      "src": "https://images-assets.nasa.gov/video/Apollo_11_moonwalk_montage_720p/Apollo_11_moonwalk_montage_720p~orig.mov",
+      "start": 40,
+      "duration": 14.3,
+      "mute": true
+    }
+  ],
+  "audio": [
+    {
+      "src": "https://images-assets.nasa.gov/video/KSC-19690716-MH-NAS01-0001-Apollo_11_Launch_President_Johnson_Jack_King_Narration_Press_Site-B_1372/KSC-19690716-MH-NAS01-0001-Apollo_11_Launch_President_Johnson_Jack_King_Narration_Press_Site-B_1372~mobile.mp4",
+      "at": 0,
+      "start": 3379.5,
+      "duration": 21.9,
+      "volume": 1,
+      "fadeIn": 0.2,
+      "fadeOut": 0.9
+    },
+    {
+      "src": "https://images-assets.nasa.gov/video/Apollo_11_moonwalk_montage_720p/Apollo_11_moonwalk_montage_720p~orig.mov",
+      "at": 21.6,
+      "start": 79.9,
+      "duration": 12.4,
+      "volume": 1,
+      "fadeIn": 0.3,
+      "fadeOut": 1.5
+    }
+  ],
+  "captions": [
+    {
+      "start": 0.46,
+      "end": 1.22,
+      "text": "12",
+      "style": "title"
+    },
+    {
+      "start": 1.22,
+      "end": 2.14,
+      "text": "11",
+      "style": "title"
+    },
+    {
+      "start": 2.14,
+      "end": 3.2,
+      "text": "10",
+      "style": "title"
+    },
+    {
+      "start": 3.2,
+      "end": 4.2,
+      "text": "9",
+      "style": "title"
+    },
+    {
+      "start": 4.36,
+      "end": 5.9,
+      "text": "Ignition sequence start."
+    },
+    {
+      "start": 5.98,
+      "end": 7.02,
+      "text": "6",
+      "style": "title"
+    },
+    {
+      "start": 7.02,
+      "end": 7.98,
+      "text": "5",
+      "style": "title"
+    },
+    {
+      "start": 7.98,
+      "end": 8.82,
+      "text": "4",
+      "style": "title"
+    },
+    {
+      "start": 8.82,
+      "end": 9.74,
+      "text": "3",
+      "style": "title"
+    },
+    {
+      "start": 9.74,
+      "end": 10.64,
+      "text": "2",
+      "style": "title"
+    },
+    {
+      "start": 10.64,
+      "end": 11.76,
+      "text": "1",
+      "style": "title"
+    },
+    {
+      "start": 11.76,
+      "end": 12.9,
+      "text": "0",
+      "style": "title"
+    },
+    {
+      "start": 12.94,
+      "end": 14.38,
+      "text": "All engine running."
+    },
+    {
+      "start": 14.38,
+      "end": 17.32,
+      "text": "Liftoff. We have a liftoff."
+    },
+    {
+      "start": 17.32,
+      "end": 19.26,
+      "text": "32 minutes past the hour."
+    },
+    {
+      "start": 19.26,
+      "end": 21.0,
+      "text": "Liftoff on Apollo 11."
+    },
+    {
+      "start": 21.82,
+      "end": 24.3,
+      "text": "Here men from the planet Earth"
+    },
+    {
+      "start": 24.5,
+      "end": 26.7,
+      "text": "first set foot upon the Moon,"
+    },
+    {
+      "start": 26.96,
+      "end": 30.2,
+      "text": "July 1969, A.D."
+    },
+    {
+      "start": 31.24,
+      "end": 33.1,
+      "text": "We came in peace."
+    }
+  ],
+  "endCard": "Cut by Claude with openmode.ai",
+  "loudness": -16
+}

@@ -168,6 +168,38 @@
   </div>
 </section>
 
+<section aria-labelledby="demo">
+  <div class="section-head">
+    <p class="eyebrow" id="demo">Made with it</p>
+    <p class="note" style="margin:0">Footage and sound: NASA.</p>
+  </div>
+  <div class="demo">
+    <figure class="proof">
+      <video controls playsinline preload="none" poster="img/apollo-11-poster.jpg" width="720" height="720"
+             aria-label="A 35-second Apollo 11 trailer: the Saturn V on the pad during the countdown, liftoff, then an astronaut on the ladder and the flag on the Moon, with captions.">
+        <source src="video/apollo-11.mp4" type="video/mp4">
+      </video>
+      <figcaption>Cut by Claude with the three commands on this page. The edit files are in <a href="https://github.com/shansabnani/openmode/tree/main/examples/apollo-11">examples/apollo-11</a>.</figcaption>
+    </figure>
+    <div class="text">
+      <h2>Apollo 11 in 35 seconds, cut by an agent.</h2>
+      <p>NASA’s 70mm launch film is silent and in slow motion. The agent looked at it, took the countdown from a second NASA film, ran the launch at 2× so the rocket rises on the word “liftoff”, and captioned every line.</p>
+      <div class="run">
+        <code class="cmd">openmode look footage/launch.mp4</code>
+        <pre class="out"><span>Sheet: …/sheets/launch.jpg (5x5 tiles)</span><span>Video: 84.21s, 1812x1812, 24 fps, h264, 54.1 MB</span><span>No sound.</span></pre>
+      </div>
+      <div class="run">
+        <code class="cmd">openmode render apollo.json --final</code>
+        <pre class="out"><span>final: 35.2s, 1080x1080, 30 fps, 11.6 MB, with sound</span><span>Rendered in 4.61s (h264_videotoolbox)</span></pre>
+      </div>
+      <div class="run">
+        <code class="cmd">openmode versions</code>
+        <pre class="out"><span>v1    2026-11-13 17:49  first draft: countdown, liftoff, flag on the Moon</span><span>v2    2026-11-13 17:50  liftoff lands on the word; ladder shot before the flag; quieter mix</span><span>v3    2026-11-13 17:50  vertical version: ladder shot replaces the flag, which the 9:16 crop cut off</span></pre>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section aria-labelledby="edit-file">
   <div class="section-head">
     <p class="eyebrow" id="edit-file">The edit file</p>

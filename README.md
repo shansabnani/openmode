@@ -10,6 +10,10 @@ claude mcp add openmode -- npx -y openmode mcp
 
 Then ask: *"Cut the silences out of interview.mp4, add captions, and make a vertical version."*
 
+## See it work
+
+[A 35-second Apollo 11 trailer](https://openmode.ai/video/apollo-11.mp4), cut by Claude from NASA's public-domain footage with openmode: the real countdown, captions on every line, a square and a vertical version. The edit files are in [`examples/apollo-11`](examples/apollo-11); one command renders it on your machine.
+
 ## What it gives an agent
 
 | | What it does | Why an agent needs it |
