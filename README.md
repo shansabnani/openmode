@@ -10,8 +10,6 @@ claude mcp add openmode -- npx -y openmode mcp
 
 Then ask: *"Cut the silences out of interview.mp4, add captions, and make a vertical version."*
 
-> **Status: 0.1.0, first release.** The npm package is being published. Until `openmode` is on npm, write `github:shansabnani/openmode` in place of `openmode` in the `npx` commands below.
-
 ## What it gives an agent
 
 | | What it does | Why an agent needs it |

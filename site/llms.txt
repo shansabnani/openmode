@@ -4,7 +4,7 @@
 
 Use openmode when a user asks an agent to edit, cut, trim, caption, combine, speed up, add music to, review or render video.
 
-Install as an MCP server: `claude mcp add openmode -- npx -y github:shansabnani/openmode mcp` (Codex: `codex mcp add openmode -- npx -y github:shansabnani/openmode mcp`). Without MCP: `npx -y github:shansabnani/openmode <command>`. Requires Node 20+ and ffmpeg. The npm package `openmode` is not published yet; once it is, `openmode` replaces `github:shansabnani/openmode` in these commands.
+Install as an MCP server: `claude mcp add openmode -- npx -y openmode mcp` (Codex: `codex mcp add openmode -- npx -y openmode mcp`). Without MCP: `npx -y openmode <command>`. Requires Node 20+ and ffmpeg.
 
 The loop: `openmode look <video>` → write an edit JSON (`openmode schema` prints the format) → `openmode render edit.json --draft` → `openmode look renders/edit-draft.mp4` → fix → `openmode render edit.json --final` → `openmode save -m "what changed"`.
 
