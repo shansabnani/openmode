@@ -4,7 +4,7 @@
   "title": "openmode",
   "description": "Video editing and rendering for coding agents: look at footage, render edits and frames to MP4, keep versions.",
   "version": "0.1.0",
-  "websiteUrl": "https://openmode.ai",
+  "websiteUrl": "https://github.com/shansabnani/openmode",
   "repository": { "url": "https://github.com/shansabnani/openmode", "source": "github" },
   "packages": [
     {
