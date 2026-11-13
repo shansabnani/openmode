@@ -39,8 +39,8 @@
   "applicationCategory": "MultimediaApplication",
   "applicationSubCategory": "Video editing",
   "operatingSystem": "macOS, Linux, Windows",
-  "softwareVersion": "0.1.1",
-  "softwareRequirements": "Node.js 20 or newer, ffmpeg",
+  "softwareVersion": "0.2.0",
+  "softwareRequirements": "Node.js 20 or newer, ffmpeg; Blender for 3D scenes",
   "license": "https://opensource.org/licenses/MIT",
   "isAccessibleForFree": true,
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
@@ -50,7 +50,8 @@
     "look: contact sheet with timestamps plus length, size, loudness, silent stretches, black frames and missing frames",
     "render: an edit file or a folder of numbered frames to MP4, draft or final",
     "versions: save, list, restore and diff the film folder",
-    "MCP server with six tools for Claude Code, Codex, Cursor and other clients"
+    "blender: render a .blend file or a Python scene script to MP4 with the local Blender, draft or final",
+    "MCP server with seven tools for Claude Code, Codex, Cursor and other clients"
   ]
 }
 </script>
@@ -59,11 +60,11 @@
   "@context": "https://schema.org",
   "@type": "FAQPage",
   "mainEntity": [
-    { "@type": "Question", "name": "What can an agent do with openmode?", "acceptedAnswer": { "@type": "Answer", "text": "Look at a video, trim and join clips, change speed, add fades, captions, music and an end card, turn a folder of frames into a video, and render an MP4 at up to 4K. It also saves every version." } },
+    { "@type": "Question", "name": "What can an agent do with openmode?", "acceptedAnswer": { "@type": "Answer", "text": "Look at a video, trim and join clips, change speed, add fades, captions, music and an end card, render a Blender scene, turn a folder of frames into a video, and render an MP4 at up to 4K. It also saves every version." } },
     { "@type": "Question", "name": "Which agents does openmode work with?", "acceptedAnswer": { "@type": "Answer", "text": "Any agent that can use MCP or run a command: Claude Code, Codex, Cursor and others." } },
-    { "@type": "Question", "name": "What does openmode cost?", "acceptedAnswer": { "@type": "Answer", "text": "Nothing. It runs on your own computer with your own ffmpeg, so there is no account, no upload and no API key." } },
-    { "@type": "Question", "name": "What do I need to run openmode?", "acceptedAnswer": { "@type": "Answer", "text": "Node.js 20 or newer and ffmpeg." } },
-    { "@type": "Question", "name": "How do I contribute to openmode?", "acceptedAnswer": { "@type": "Answer", "text": "Star the repo, open an issue, or add an engine. CONTRIBUTING.md in the GitHub repository shows how. A Blender engine is on the roadmap." } }
+    { "@type": "Question", "name": "What does openmode cost?", "acceptedAnswer": { "@type": "Answer", "text": "Nothing. It runs on your own computer with your own ffmpeg and Blender, so there is no account, no upload and no API key." } },
+    { "@type": "Question", "name": "What do I need to run openmode?", "acceptedAnswer": { "@type": "Answer", "text": "Node.js 20 or newer and ffmpeg. Blender only if you render 3D scenes." } },
+    { "@type": "Question", "name": "How do I contribute to openmode?", "acceptedAnswer": { "@type": "Answer", "text": "Star the repo, open an issue, or add an engine. CONTRIBUTING.md in the GitHub repository shows how. An HTML engine and GPU rendering are on the roadmap." } }
   ]
 }
 </script>
@@ -221,7 +222,7 @@
     <article>
       <p class="eyebrow quiet">Render</p>
       <h2>An edit file in, an MP4 out.</h2>
-      <p>Clips, trims, speed, captions and music. A draft in seconds, a final at up to 4K.</p>
+      <p>Clips, trims, speed, captions and music, or a Blender scene. A draft in seconds, a final at up to 4K.</p>
     </article>
     <article>
       <p class="eyebrow quiet">Versions</p>
@@ -233,7 +234,7 @@
 
 <section aria-labelledby="mcp-tools">
   <div class="section-head">
-    <p class="eyebrow" id="mcp-tools">Six MCP tools</p>
+    <p class="eyebrow" id="mcp-tools">Seven MCP tools</p>
   </div>
   <div class="tools">
     <table>
@@ -241,6 +242,7 @@
         <tr><th scope="row">look</th><td>See a video as one image, with its facts.</td></tr>
         <tr><th scope="row">render_edit</th><td>Turn an edit file into an MP4.</td></tr>
         <tr><th scope="row">render_frames</th><td>Turn numbered frames and sound into an MP4.</td></tr>
+        <tr><th scope="row">render_blender</th><td>Render a Blender scene with your own Blender.</td></tr>
         <tr><th scope="row">versions</th><td>Save, list, restore and compare.</td></tr>
         <tr><th scope="row">edit_schema</th><td>The edit file format, with an example.</td></tr>
         <tr><th scope="row">status</th><td>Check that ffmpeg is ready.</td></tr>
@@ -265,7 +267,7 @@
   <div class="faq">
     <details>
       <summary>What can an agent do with it?</summary>
-      <p>Look at a video, trim and join clips, change speed, add fades, captions, music and an end card, turn a folder of frames into a video, and render an MP4 at up to 4K. It also saves every version.</p>
+      <p>Look at a video, trim and join clips, change speed, add fades, captions, music and an end card, render a Blender scene, turn a folder of frames into a video, and render an MP4 at up to 4K. It also saves every version.</p>
     </details>
     <details>
       <summary>Which agents does it work with?</summary>
@@ -273,15 +275,15 @@
     </details>
     <details>
       <summary>What does it cost?</summary>
-      <p>Nothing. It runs on your own computer with your own ffmpeg, so there is no account, no upload and no API key.</p>
+      <p>Nothing. It runs on your own computer with your own ffmpeg and Blender, so there is no account, no upload and no API key.</p>
     </details>
     <details>
       <summary>What do I need?</summary>
-      <p>Node.js 20 or newer and ffmpeg.</p>
+      <p>Node.js 20 or newer and ffmpeg. Blender only if you render 3D scenes.</p>
     </details>
     <details>
       <summary>How do I contribute?</summary>
-      <p>Star the repo, open an issue, or add an engine. <a href="https://github.com/shansabnani/openmode/blob/main/CONTRIBUTING.md">CONTRIBUTING.md</a> shows how. A Blender engine is on the roadmap.</p>
+      <p>Star the repo, open an issue, or add an engine. <a href="https://github.com/shansabnani/openmode/blob/main/CONTRIBUTING.md">CONTRIBUTING.md</a> shows how. An HTML engine and GPU rendering are on the roadmap.</p>
     </details>
   </div>
 </section>
@@ -289,7 +291,7 @@
 </main>
 
 <footer>
-  <p class="eyebrow quiet">openmode 0.1.1 · MIT licence</p>
+  <p class="eyebrow quiet">openmode 0.2.0 · MIT licence</p>
   <nav aria-label="Links">
     <a class="eyebrow" href="https://github.com/shansabnani/openmode#readme">Docs</a>
     <a class="eyebrow" href="https://github.com/shansabnani/openmode">GitHub</a>

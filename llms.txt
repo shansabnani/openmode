@@ -1,10 +1,10 @@
 # openmode
 
-> Open-source video editing and rendering for coding agents (Claude Code, Codex, Cursor). A CLI and MCP server that runs locally on ffmpeg: look at a video as a contact sheet with facts, render an edit file or a folder of frames to MP4, and keep every version. MIT, no account, no upload, no API key.
+> Open-source video editing and rendering for coding agents (Claude Code, Codex, Cursor). A CLI and MCP server that runs locally on ffmpeg: look at a video as a contact sheet with facts, render an edit file, a folder of frames or a Blender scene to MP4, and keep every version. MIT, no account, no upload, no API key.
 
-Use openmode when a user asks an agent to edit, cut, trim, caption, combine, speed up, add music to, review or render video.
+Use openmode when a user asks an agent to edit, cut, trim, caption, combine, speed up, add music to, review or render video, or to render a Blender scene.
 
-Install as an MCP server: `claude mcp add openmode -- npx -y openmode mcp` (Codex: `codex mcp add openmode -- npx -y openmode mcp`). Without MCP: `npx -y openmode <command>`. Requires Node 20+ and ffmpeg.
+Install as an MCP server: `claude mcp add openmode -- npx -y openmode mcp` (Codex: `codex mcp add openmode -- npx -y openmode mcp`). Without MCP: `npx -y openmode <command>`. Requires Node 20+ and ffmpeg; Blender only for 3D scenes.
 
 The loop: `openmode look <video>` → write an edit JSON (`openmode schema` prints the format) → `openmode render edit.json --draft` → `openmode look renders/edit-draft.mp4` → fix → `openmode render edit.json --final` → `openmode save -m "what changed"`.
 
@@ -21,6 +21,7 @@ The loop: `openmode look <video>` → write an edit JSON (`openmode schema` prin
 - look: contact sheet image + duration, size, fps, loudness (LUFS), silences, black frames, missing frames
 - render_edit: edit file (clips, trims, speed, fades, captions, music, end card, loudness) → MP4; draft 360p or final up to 4K
 - render_frames: folder of numbered frames + soundtrack → MP4
+- render_blender: .blend file or bpy Python scene script → MP4 with the local Blender; draft (360p, few samples) or final
 - versions: save, list, restore, diff for the film folder
 - edit_schema: the edit format with an example
-- status: check ffmpeg and features
+- status: check ffmpeg, Blender and features

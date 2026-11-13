@@ -4,6 +4,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
 import { status } from "./core/status.js";
+import { RENDERERS, renderBlender } from "./engines/blender/index.js";
 import { EXAMPLE_EDIT, renderEdit, validateEdit } from "./engines/edit/index.js";
 import { renderFrames } from "./engines/frames/index.js";
 import { look } from "./look/index.js";
@@ -24,7 +25,9 @@ The loop:
 4. render_edit with quality "final".
 5. versions save after each change the user might want back, with the user's prompt in "prompt".
 
-Folders of numbered frames (from Blender, a browser capture, any renderer) become an MP4 with render_frames.
+3D: render_blender renders a .blend file or a Python scene script with the Blender on this machine. Draft first, look, then final.
+
+Folders of numbered frames (a browser capture, any other renderer) become an MP4 with render_frames.
 
 Paths are relative to the working directory the server was started in unless absolute.`;
 
@@ -120,7 +123,7 @@ export function createServer(): McpServer {
     {
       title: "Render frames to MP4",
       description:
-        "Join a folder of numbered image frames (frame_0001.png ...) into an MP4, with an optional soundtrack. Use it for the output of Blender, a headless-browser capture, or any renderer that writes frames. Reports missing frame numbers instead of producing a broken film.",
+        "Join a folder of numbered image frames (frame_0001.png ...) into an MP4, with an optional soundtrack. Use it for a headless-browser capture or any renderer that writes frames. Reports missing frame numbers instead of producing a broken film.",
       inputSchema: {
         dir: z.string().describe("Folder of numbered frames."),
         fps: z.number().min(1).max(120).optional().describe("Frames per second. Default 24."),
@@ -131,6 +134,28 @@ export function createServer(): McpServer {
       },
     },
     (args) => guard(async () => json(await renderFrames(args))),
+  );
+
+  server.registerTool(
+    "render_blender",
+    {
+      title: "Render a Blender scene to MP4",
+      description:
+        "Render a .blend file, or a Python script that builds a scene with bpy, to an MP4 using the Blender installed on this machine. quality draft is small (360p), low-sample and may skip frames so you can check the scene in seconds; look at it, then render final at the scene's own size and samples. Returns the MP4 path, duration, size, renderer and frame count. Needs Blender; status says if it is installed.",
+      inputSchema: {
+        file: z.string().describe("A .blend file or a .py scene script."),
+        quality: quality.optional(),
+        range: z.string().optional().describe('Frames to render, e.g. "1-48" or "12". Default: the scene\'s range.'),
+        step: z.number().int().min(1).optional().describe("Render every Nth frame; the film keeps its length."),
+        renderer: z.enum(RENDERERS).optional().describe("Override the scene's renderer."),
+        samples: z.number().int().min(1).optional().describe("Override samples per pixel."),
+        audio: z.string().optional().describe("Soundtrack file to lay under the film."),
+        loudness: z.number().min(-40).max(-5).optional().describe("Target loudness in LUFS, e.g. -14."),
+        allowScripts: z.boolean().optional().describe("Let Python stored inside the .blend run. Off by default."),
+        out: z.string().optional().describe("Output .mp4 path. Default: renders/<name>-<quality>.mp4 next to the scene."),
+      },
+    },
+    (args) => guard(async () => json(await renderBlender({ ...args, quality: args.quality ?? "draft" }))),
   );
 
   server.registerTool(
@@ -183,7 +208,7 @@ export function createServer(): McpServer {
     {
       title: "Check this machine",
       description:
-        "Check that ffmpeg is installed and which features work here (hardware encoder, captions). Call it if a render fails for a reason that is not the edit.",
+        "Check that ffmpeg is installed, whether Blender is, and which features work here (hardware encoder, captions). Call it if a render fails for a reason that is not the edit.",
       inputSchema: {},
       annotations: { readOnlyHint: true },
     },

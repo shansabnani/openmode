@@ -1,6 +1,6 @@
 # openmode reference
 
-Everything the [README](../README.md) leaves out: every field of the edit file, recipes, how versions are stored, the library API and the source layout. `openmode schema` prints the edit format too.
+Everything the [README](../README.md) leaves out: every field of the edit file, recipes, Blender scenes, how versions are stored, the library API and the source layout. `openmode schema` prints the edit format too.
 
 ## The edit file
 
@@ -43,7 +43,30 @@ Unknown fields are rejected with their exact path (`clips[2].sped`), so a typo n
 - **Vertical cut of landscape footage.** `"format": "9:16", "fit": "cover"`.
 - **Captions.** Put a `caption` on each clip, or timed entries in `captions`.
 - **Slideshow.** Image clips with a `duration` and `"transition": "fade"`.
-- **Frames from Blender or a browser capture.** `openmode render frames/ --fps 24 --audio music.wav --loudness -14`. Missing frame numbers are reported before anything is encoded.
+- **Frames from another renderer or a browser capture.** `openmode render frames/ --fps 24 --audio music.wav --loudness -14`. Missing frame numbers are reported before anything is encoded.
+
+## Blender scenes
+
+`openmode render scene.blend` (or a `.py` script that builds the scene with `bpy`) runs the Blender installed on your machine in the background, writes one PNG per frame to a temporary folder, and joins the frames into an MP4. `openmode status` says whether Blender was found; set `BLENDER_PATH` if it is somewhere unusual.
+
+| Option | Meaning |
+|---|---|
+| `--draft` (default) | For checking. The short side is at most 360 pixels, samples are capped at 16, and scenes longer than 120 frames skip frames so the draft stays quick. |
+| `--final` | The scene's own size, samples and every frame. |
+| `--range 1-48` | Frames to render. Default: the scene's range. |
+| `--step 2` | Render every 2nd frame. The film plays at half the frame rate, so it keeps its length. |
+| `--renderer cycles` | Override the scene's renderer: `cycles`, `eevee` or `workbench`. |
+| `--samples 32` | Override samples per pixel. |
+| `--audio music.wav`, `--loudness -14` | A soundtrack under the film. |
+| `--scripts` | Let Python stored inside the `.blend` run (rig scripts, drivers). Off by default, because a `.blend` from someone else can carry code. |
+| `--out film.mp4` | Where to write. Default: `renders/<name>-<quality>.mp4` next to the scene. |
+
+Things to know:
+
+- A scene needs a camera. If none is active, the first camera in the scene is used; with no camera the render stops and says so.
+- A `.py` scene script runs from its own folder in an empty Blender, then openmode renders whatever scene it left.
+- EEVEE needs a GPU. On a server without one, use `--renderer cycles`.
+- Tested with Blender 5.3. The MCP tool is `render_blender`, with the same options.
 
 ## Versions
 
@@ -75,6 +98,7 @@ src/
   engines/    one folder per thing openmode can render
     edit/       edit file → MP4
     frames/     numbered frames → MP4
+    blender/    .blend or bpy script → frames → MP4
   versions/   content-addressed snapshots, restore, diff
   cli.ts      command line
   mcp.ts      MCP server

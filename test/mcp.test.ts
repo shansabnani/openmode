@@ -28,7 +28,7 @@ describe("mcp server", () => {
   it("offers a small, described tool set and usage instructions", async () => {
     const { tools } = await client.listTools();
     expect(tools.map((tool) => tool.name).sort()).toEqual(
-      ["edit_schema", "look", "render_edit", "render_frames", "status", "versions"],
+      ["edit_schema", "look", "render_blender", "render_edit", "render_frames", "status", "versions"],
     );
     expect(JSON.stringify(tools).length).toBeLessThan(9000);
     expect(client.getInstructions()).toMatch(/look at the draft/);
@@ -56,6 +56,10 @@ describe("mcp server", () => {
   });
 
   it("returns errors the agent can act on", async () => {
+    const lost = await call("render_blender", { file: join(dir, "missing.blend") });
+    expect(lost.isError).toBe(true);
+    expect(lost.content[0]!.text).toMatch(/Scene not found: .*missing\.blend/);
+
     const bad = await call("render_edit", { edit: { version: 1, clips: [{ src: "footage/talk.mp4", sped: 2 }] } });
     expect(bad.isError).toBe(true);
     expect(bad.content[0]!.text).toMatch(/clips\[0\]/);
