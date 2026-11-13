@@ -1,0 +1,72 @@
+{
+  "name": "openmode",
+  "version": "0.1.0",
+  "description": "Open-source video rendering and editing for coding agents: look at a video, render an edit, frames or a Blender scene to MP4, and keep every version. CLI + MCP server.",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "openmode": "dist/cli.js"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "rm -rf dist && tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "dev": "tsx src/cli.ts",
+    "prepublishOnly": "npm run typecheck && npm test && npm run build",
+    "prepare": "npm run build"
+  },
+  "keywords": [
+    "video",
+    "video-editing",
+    "video-editor",
+    "render",
+    "ffmpeg",
+    "mcp",
+    "mcp-server",
+    "model-context-protocol",
+    "claude",
+    "claude-code",
+    "codex",
+    "cursor",
+    "ai-agents",
+    "headless",
+    "captions",
+    "subtitles",
+    "blender"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shansabnani/openmode.git"
+  },
+  "homepage": "https://openmode.ai",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.2",
+    "zod": "^4.1.12"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "tsx": "^4.23.15",
+    "typescript": "^5",
+    "vitest": "^3.2.4"
+  },
+  "mcpName": "io.github.shansabnani/openmode",
+  "bugs": {
+    "url": "https://github.com/shansabnani/openmode/issues"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.shansabnani/openmode",
+  "title": "openmode",
+  "description": "Video editing and rendering for coding agents: look at footage, render edits and frames to MP4, keep versions.",
+  "version": "0.1.0",
+  "websiteUrl": "https://openmode.ai",
+  "repository": { "url": "https://github.com/shansabnani/openmode", "source": "github" },
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "openmode",
+      "version": "0.1.0",
+      "transport": { "type": "stdio" },
+      "runtimeArguments": [],
+      "packageArguments": [{ "type": "positional", "value": "mcp" }]
+    }
+  ]
+}
