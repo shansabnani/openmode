@@ -1,6 +1,6 @@
 {
   "name": "openmode",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Video editing and rendering for coding agents. A CLI and MCP server for Claude Code, Codex and Cursor: look at footage, render an edit file or frames to MP4 with ffmpeg, keep every version.",
   "license": "MIT",
   "type": "module",
