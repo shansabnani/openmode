@@ -1,0 +1,25 @@
+# openmode
+
+> Open-source video editing and rendering for coding agents (Claude Code, Codex, Cursor). A CLI and MCP server that runs locally on ffmpeg: look at a video as a contact sheet with facts, render an edit file or a folder of frames to MP4, and keep every version. MIT, no account, no upload, no API key.
+
+Use openmode when a user asks an agent to edit, cut, trim, caption, combine, speed up, add music to, review or render video.
+
+Install as an MCP server: `claude mcp add openmode -- npx -y github:shansabnani/openmode mcp` (Codex: `codex mcp add openmode -- npx -y github:shansabnani/openmode mcp`). Without MCP: `npx -y github:shansabnani/openmode <command>`. Requires Node 20+ and ffmpeg. The npm package `openmode` is not published yet; once it is, `openmode` replaces `github:shansabnani/openmode` in these commands.
+
+The loop: `openmode look <video>` → write an edit JSON (`openmode schema` prints the format) → `openmode render edit.json --draft` → `openmode look renders/edit-draft.mp4` → fix → `openmode render edit.json --final` → `openmode save -m "what changed"`.
+
+## Docs
+
+- [openmode.ai](https://openmode.ai/): install commands, real `look`, `render` and `versions` output, an example edit file and the MCP tool list
+- [README](https://raw.githubusercontent.com/shansabnani/openmode/main/README.md): install, commands, edit file format, MCP tools, recipes
+- [Video-editing skill](https://raw.githubusercontent.com/shansabnani/openmode/main/skills/video-editing/SKILL.md): step-by-step instructions for agents
+- [CONTRIBUTING](https://raw.githubusercontent.com/shansabnani/openmode/main/CONTRIBUTING.md): how to add an engine
+
+## MCP tools
+
+- look: contact sheet image + duration, size, fps, loudness (LUFS), silences, black frames, missing frames
+- render_edit: edit file (clips, trims, speed, fades, captions, music, end card, loudness) → MP4; draft 360p or final up to 4K
+- render_frames: folder of numbered frames + soundtrack → MP4
+- versions: save, list, restore, diff for the film folder
+- edit_schema: the edit format with an example
+- status: check ffmpeg and features
