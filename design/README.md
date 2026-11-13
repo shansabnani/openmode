@@ -34,4 +34,4 @@ The page was cut from 777 visible words to about 400 on 14 Nov 2026. Keep it tha
 
 Every command and output block on the page was produced by openmode 0.1.0 while making the Apollo 11 demo in `examples/apollo-11` from NASA footage. The contact sheet is `openmode look` on the launch film with `--frames 10 --start 4 --end 62`; the edit file shown is a shortened `apollo.json` that still passes `openmode check`. To regenerate, rerun the commands shown on the page and copy the new sheet into `site/img/`.
 
-`design/og.html` is the source of `site/og.png` (open at 1200x630 and screenshot); it still uses the earlier test-clip sheet, `site/img/look-sheet.jpg`. `design/screenshots/` holds the first version of the page at 1440px and 390px.
+`design/og.html` is the source of `site/og.png`. Regenerate it with headless Chrome at 1200x630 (`--headless=new --window-size=1200,630 --force-device-scale-factor=1 --screenshot=site/og.png design/og.html`), and bump the `?v=` on the `og:image` links in `site/index.html` so link previews refresh. `design/screenshots/` holds the first version of the page at 1440px and 390px.
