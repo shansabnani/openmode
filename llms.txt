@@ -12,6 +12,7 @@ The loop: `openmode look <video>` → write an edit JSON (`openmode schema` prin
 
 - [README](https://raw.githubusercontent.com/shansabnani/openmode/main/README.md): install, commands, edit file format, MCP tools, recipes
 - [Video-editing skill](https://raw.githubusercontent.com/shansabnani/openmode/main/skills/video-editing/SKILL.md): step-by-step instructions for agents
+- [Apollo 11 example](https://raw.githubusercontent.com/shansabnani/openmode/main/examples/apollo-11/apollo.json): a complete edit file (clips from https URLs, speed, fades, two audio tracks, timed captions) that renders a 35-second trailer
 - [CONTRIBUTING](https://raw.githubusercontent.com/shansabnani/openmode/main/CONTRIBUTING.md): how to add an engine
 
 ## MCP tools
