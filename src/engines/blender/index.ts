@@ -219,8 +219,7 @@ export async function renderBlender(request: BlenderRenderRequest): Promise<Rend
     }
     const resultFile = join(jobDir, "result.json");
     if (run.code !== 0 || !existsSync(resultFile)) {
-      const last = run.output.split("\n").filter((line) => !line.startsWith("OPENMODE ")).slice(-6).join(" | ");
-      throw new Error(`Blender ${version} stopped before the render finished${last ? `: ${last.slice(0, 1200)}` : "."}`);
+      throw new Error(explainFailure(version, run.output));
     }
     const result = JSON.parse(readFileSync(resultFile, "utf8")) as DriverResult;
 
@@ -256,6 +255,22 @@ export async function renderBlender(request: BlenderRenderRequest): Promise<Rend
   } finally {
     removeDir(jobDir);
   }
+}
+
+/** Turn what Blender printed before it stopped into something an agent can act on. */
+export function explainFailure(version: string, output: string): string {
+  const last = output
+    .split("\n")
+    .filter((line) => !line.startsWith("OPENMODE "))
+    .slice(-6)
+    .join(" | ")
+    .slice(0, 1200);
+  const said = last ? `: ${last}` : ".";
+  // EEVEE and Workbench draw with the graphics card; a server often has none.
+  if (/libEGL|\bEGL\b|\bGPU\b|OpenGL|Vulkan|graphics/i.test(output)) {
+    return `Blender ${version} could not use a graphics card on this machine, which the EEVEE and Workbench renderers need. Render with renderer "cycles" (--renderer cycles), which runs on the processor. Blender said${said}`;
+  }
+  return `Blender ${version} stopped before the render finished${said}`;
 }
 
 function ordinal(n: number): string {

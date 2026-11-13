@@ -2,7 +2,13 @@ import { execFileSync } from "node:child_process";
 import { existsSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { afterEach, beforeAll, describe, expect, it } from "vitest";
-import { BLENDER_INSTALL_HINT, detectBlender, parseRange, renderBlender } from "../src/engines/blender/index.js";
+import {
+  BLENDER_INSTALL_HINT,
+  detectBlender,
+  explainFailure,
+  parseRange,
+  renderBlender,
+} from "../src/engines/blender/index.js";
 import { render } from "../src/engines/index.js";
 import { makeMedia, probe, tempDir } from "./helpers.js";
 
@@ -55,6 +61,14 @@ describe("blender: without Blender", () => {
     expect(parseRange("12")).toEqual({ start: 12, end: 12 });
     expect(() => parseRange("48-1")).toThrow(/ends before it starts/);
     expect(() => parseRange("first")).toThrow(/1-48 or 12/);
+  });
+
+  it("points at Cycles when Blender has no graphics card to draw with", () => {
+    const headless = "Blender 5.0.1\nCouldn't open libEGL.so.1: libEGL.so.1: cannot open shared object file";
+    expect(explainFailure("5.0.1", headless)).toMatch(/could not use a graphics card.*--renderer cycles.*libEGL\.so\.1/);
+    expect(explainFailure("5.0.1", "Segmentation fault")).toBe(
+      "Blender 5.0.1 stopped before the render finished: Segmentation fault",
+    );
   });
 
   it("refuses files that are not scenes", async () => {
@@ -119,7 +133,7 @@ describe.skipIf(!blender)("blender: rendering", () => {
     expect(existsSync(join(dir, "stepped.mp4"))).toBe(true);
   }, 180_000);
 
-  it("makes a draft smaller than the scene, and lets the renderer be changed", async () => {
+  it("makes a draft smaller than the scene, and lets the renderer and samples be changed", async () => {
     const big = join(dir, "big.py");
     writeFileSync(
       big,
@@ -128,8 +142,11 @@ describe.skipIf(!blender)("blender: rendering", () => {
     const draft = await renderBlender({ file: big, range: "1" });
     expect(draft).toMatchObject({ width: 640, height: 360 });
     expect(draft.notes?.[0]).toMatch(/Cycles, 16 samples$/);
-    const workbench = await renderBlender({ file: big, range: "1", renderer: "workbench", out: join(dir, "wb.mp4") });
-    expect(workbench.notes?.[0]).toMatch(/Workbench$/);
+    // A scene saved for a renderer that needs a graphics card still renders on any machine with Cycles.
+    const gpuScene = join(dir, "workbench.py");
+    writeFileSync(gpuScene, `${SCENE}\nscene.render.engine = "BLENDER_WORKBENCH"\n`);
+    const cycles = await renderBlender({ file: gpuScene, range: "1", renderer: "cycles", samples: 2 });
+    expect(cycles.notes?.[0]).toMatch(/Cycles, 2 samples$/);
   }, 180_000);
 
   it("explains a scene with no camera", async () => {
