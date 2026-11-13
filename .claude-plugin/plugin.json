@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "Video editing and rendering for Claude Code: look at footage, render edits and frames to MP4, keep every version. Local, ffmpeg-based, free.",
   "author": { "name": "openmode" },
-  "homepage": "https://github.com/shansabnani/openmode#readme",
+  "homepage": "https://openmode.ai",
   "repository": "https://github.com/shansabnani/openmode",
   "license": "MIT",
   "keywords": ["video", "video-editing", "ffmpeg", "render", "captions", "mcp"],
