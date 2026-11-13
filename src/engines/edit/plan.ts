@@ -250,7 +250,11 @@ export function planFfmpeg(
     const duration = members.reduce((sum, clip) => sum + clip.duration, 0);
     if (members.length === 1) {
       const only = members[0]!.index;
-      return { v: `v${only}`, a: `a${only}`, duration };
+      if (runs.length === 1) return { v: `v${only}`, a: `a${only}`, duration };
+      // xfade needs a known frame rate on both inputs, and the trim/setpts at
+      // the end of a clip's chain clears it, so restate it for a lone clip.
+      filters.push(`[v${only}]fps=${fps},format=yuv420p,setsar=1,settb=1/${fps}[rv${r}]`);
+      return { v: `rv${r}`, a: `a${only}`, duration };
     }
     const pads = members
       .map((clip) => (withAudio ? `[v${clip.index}][a${clip.index}]` : `[v${clip.index}]`))

@@ -79,6 +79,63 @@ describe("edit render", () => {
     expect(result.duration).toBeCloseTo(4, 1);
   });
 
+  it("fades between lone clips, with and without sound", async () => {
+    // Each clip here is its own run (a fade on every join), the shape of the README example.
+    const lone = await renderEdit({
+      edit: {
+        version: 1,
+        clips: [
+          { src: "footage/talk.mp4", end: 2, transition: "fade" },
+          { src: "footage/talk.mp4", start: 1, end: 3, transition: "fade" },
+          { src: "footage/logo.png", duration: 2 },
+        ],
+      },
+      baseDir: dir,
+      out: join(dir, "out", "fades.mp4"),
+    });
+    expect(lone.hasAudio).toBe(true);
+    expect(lone.duration).toBeCloseTo(5, 1); // 2 + 2 + 2, minus two 0.5 s fades
+    expect(Number(probe(lone.path).format.duration)).toBeCloseTo(5, 0);
+
+    const mixed = await renderEdit({
+      edit: {
+        version: 1,
+        clips: [
+          { src: "footage/logo.png", duration: 1.5, transition: "fade" },
+          { src: "footage/silent.mp4", end: 2 },
+          { src: "footage/silent.mp4", start: 1, end: 3, transition: "fade" },
+          { src: "footage/logo.png", duration: 1.5 },
+        ],
+      },
+      baseDir: dir,
+      out: join(dir, "out", "fades-silent.mp4"),
+    });
+    expect(mixed.hasAudio).toBe(false);
+    expect(mixed.duration).toBeCloseTo(6, 1); // 1.5 + 2 + 2 + 1.5, minus two 0.5 s fades
+  });
+
+  it("renders the README example shape", async () => {
+    const result = await renderEdit({
+      edit: {
+        version: 1,
+        format: "9:16",
+        fit: "cover",
+        clips: [
+          { src: "footage/talk.mp4", start: 1.2, end: 3, caption: "A caption." },
+          { src: "footage/talk.mp4", start: 0, end: 2.5, speed: 1.25, transition: "fade" },
+          { src: "footage/logo.png", duration: 2 },
+        ],
+        audio: [{ src: "footage/music.wav", volume: 0.25, fadeIn: 0.5, fadeOut: 1.5 }],
+        captions: [{ start: 2, end: 3, text: "Timed." }],
+        endCard: "openmode.ai",
+        loudness: -14,
+      },
+      baseDir: dir,
+      out: join(dir, "out", "readme.mp4"),
+    });
+    expect(result).toMatchObject({ width: 360, height: 640, hasAudio: true });
+  });
+
   it("explains a trim that runs past the end of the source", async () => {
     await expect(
       validateEdit({ edit: { version: 1, clips: [{ src: "footage/talk.mp4", start: 1, end: 9 }] }, baseDir: dir }),
