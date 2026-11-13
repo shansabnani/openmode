@@ -15,8 +15,9 @@
   .head .eyebrow { font-size: 14px; }
   .body { flex: 1; display: grid; grid-template-columns: 520px 1fr; gap: 44px; align-items: center; }
   .body h1 { font-size: 64px; margin: 0; line-height: 1.02; text-wrap: wrap; }
-  .body img { width: 100%; }
-  .body pre { font-size: 15px; padding-top: 12px; }
+  .body .shot { justify-self: end; width: 404px; }
+  .body img { width: 404px; height: 404px; border: 1px solid #000; }
+  .body pre { font-size: 13px; padding-top: 10px; white-space: nowrap; }
   .foot { display: flex; justify-content: space-between; align-items: baseline; padding-top: 14px; border-top: 1px solid #d9d9d9; }
   .foot .eyebrow { font-size: 14px; }
 </style>
@@ -29,15 +30,14 @@
   </div>
   <div class="body">
     <h1>Video editing and rendering for coding agents.</h1>
-    <div>
-      <img src="../site/img/look-sheet.jpg" alt="">
-      <pre>Video: 16s, 1920x1080, 30 fps, h264, 15.6 MB
-<mark>Silences: 5-7s</mark>   <mark>Black: 5-6.5s</mark></pre>
+    <div class="shot">
+      <img src="../site/img/apollo-11-poster.jpg" alt="">
+      <pre>final: 35.2s, 1080x1080, 30 fps, 11.6 MB, with sound</pre>
     </div>
   </div>
   <div class="foot">
     <span class="eyebrow">openmode.ai</span>
-    <span class="eyebrow quiet">look · render · versions</span>
+    <span class="eyebrow quiet">Cut by Claude from NASA’s Apollo 11 footage</span>
   </div>
 </div>
 </body>
