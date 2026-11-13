@@ -125,7 +125,7 @@ p {
 
 .top {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
   gap: 16px;
   padding: 18px 0 14px;
@@ -140,7 +140,20 @@ p {
 }
 .top nav {
   display: flex;
+  align-items: center;
   gap: 24px;
+}
+/* The main action: copy the install command for the selected client. */
+.top .cta {
+  display: inline-block;
+  border: 1px solid var(--ink);
+  padding: 10px 16px;
+  min-width: 0;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+.top nav a.cta:hover {
+  text-decoration: none;
 }
 .top nav a {
   text-decoration: none;
@@ -172,6 +185,20 @@ p {
 .hero .shot {
   grid-column: 2;
   grid-row: 1 / span 3;
+}
+
+.shot video {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  background: var(--ink);
+  border: 1px solid var(--ink);
+}
+.hero .shot {
+  max-width: 560px;
+  justify-self: end;
+  width: 100%;
 }
 
 h1 {
@@ -285,7 +312,7 @@ p code {
   background: var(--ink);
   color: var(--paper);
 }
-/* The page's one yellow control. */
+/* Yellow means one thing on this page: copy the install command. */
 .copy.primary {
   background: var(--signal);
 }
@@ -383,53 +410,50 @@ h2 {
   text-wrap: balance;
 }
 
-/* Three abilities set as newspaper columns: rules between, no boxes. */
-.columns {
+/* How it works: three steps, each a short claim beside its real output. */
+.step {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: 56px;
+  align-items: start;
+  padding: 32px 0;
+  border-top: 1px solid var(--rule);
 }
-.columns article {
-  padding: 0 24px;
-  border-left: 1px solid var(--rule);
-  display: flex;
-  flex-direction: column;
+.step:first-child {
+  padding-top: 0;
+  border-top: 0;
 }
-.columns article:first-child {
-  padding-left: 0;
-  border-left: 0;
+.step:last-child {
+  padding-bottom: 0;
 }
-.columns article:last-child {
-  padding-right: 0;
-}
-.columns h2 {
+.step h2 {
   margin-top: 10px;
 }
-.columns p:not(.eyebrow) {
-  font-size: 17px;
+.step .text p:not(.eyebrow) {
+  max-width: 24em;
+}
+.step .proof img {
+  margin-top: 10px;
+  border: 1px solid var(--ink);
+}
+.step .file + .run {
+  border-top: 0;
+  margin-top: 4px;
 }
 .run {
   margin-top: 20px;
   padding-top: 12px;
   border-top: 1px solid var(--rule);
 }
-.run + .run {
-  margin-top: 12px;
-}
-.run .out {
+.run .out,
+.step .proof > .out {
   margin-top: 4px;
 }
-.columns .cmd,
-.columns .out {
-  font-size: 12px;
+.step .proof > .out {
+  padding: 8px 0 0;
+  border-bottom: 0;
 }
 
-/* The edit file and what it produces. */
-.edit {
-  display: grid;
-  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-  gap: 56px;
-  align-items: start;
-}
 .file {
   background: var(--white);
   border: 1px solid var(--ink);
@@ -453,34 +477,6 @@ h2 {
   padding: 14px;
   overflow-x: auto;
 }
-.edit .text p {
-  margin-bottom: 20px;
-  max-width: 34em;
-}
-
-/* A film made with it: the video beside the commands that made it. */
-.demo {
-  display: grid;
-  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-  gap: 56px;
-  align-items: start;
-}
-.demo video {
-  display: block;
-  width: 100%;
-  height: auto;
-  aspect-ratio: 1 / 1;
-  background: var(--ink);
-  border: 1px solid var(--ink);
-}
-.demo .text p {
-  margin-bottom: 20px;
-  max-width: 34em;
-}
-.demo .run:first-of-type {
-  margin-top: 0;
-}
-
 /* MCP tools: a plain ruled list. */
 .tools {
   display: grid;
@@ -519,11 +515,62 @@ td {
 .get p {
   margin-bottom: 14px;
 }
+.links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.links li {
+  padding: 8px 0;
+  border-top: 1px solid var(--rule);
+}
+.links li:last-child {
+  border-bottom: 1px solid var(--rule);
+}
 .get .big {
   font-size: 28px;
   font-weight: 500;
   line-height: 1.15;
   letter-spacing: -0.02em;
+}
+
+/* Questions: closed by default, so the page stays short. */
+.faq {
+  max-width: 46em;
+}
+.faq details {
+  border-bottom: 1px solid var(--rule);
+}
+.faq details:first-child {
+  border-top: 1px solid var(--rule);
+}
+.faq summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  padding: 12px 0;
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  list-style: none;
+}
+.faq summary::-webkit-details-marker {
+  display: none;
+}
+.faq summary::after {
+  content: "+";
+  font-family: var(--mono);
+  font-size: 16px;
+  font-weight: 400;
+}
+.faq details[open] summary::after {
+  content: "−";
+}
+.faq details p {
+  padding: 0 0 16px;
+  max-width: 40em;
 }
 
 footer {
@@ -553,8 +600,7 @@ footer a:hover {
     --gutter: 20px;
   }
   .hero,
-  .edit,
-  .demo,
+  .step,
   .tools {
     grid-template-columns: minmax(0, 1fr);
     gap: 36px;
@@ -577,22 +623,12 @@ footer a:hover {
     order: 3;
     margin-top: 0;
   }
-  .columns {
-    grid-template-columns: minmax(0, 1fr);
+  .hero .shot {
+    max-width: none;
   }
-  .columns article,
-  .columns article:first-child,
-  .columns article:last-child {
-    padding: 24px 0;
-    border-left: 0;
-    border-top: 1px solid var(--rule);
-  }
-  .columns article:first-child {
-    padding-top: 0;
-    border-top: 0;
-  }
-  .columns article:last-child {
-    padding-bottom: 0;
+  .step {
+    gap: 20px;
+    padding: 28px 0;
   }
   section {
     padding-bottom: 48px;
@@ -607,7 +643,16 @@ footer a:hover {
     font-size: 18px;
   }
   .top nav {
-    gap: 16px;
+    gap: 14px;
+  }
+  .top .cta .wide {
+    display: none;
+  }
+  .top .cta {
+    padding: 9px 12px;
+  }
+  .faq summary {
+    font-size: 18px;
   }
   h1 {
     margin: 12px 0 14px;
