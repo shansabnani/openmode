@@ -127,71 +127,106 @@
   </div>
 
   <figure class="proof shot">
-    <video controls playsinline preload="none" poster="img/apollo-11-poster.jpg" width="720" height="720"
-           aria-label="A 35-second Apollo 11 trailer: the Saturn V on the pad during the countdown, liftoff, then an astronaut on the ladder and the flag on the Moon, with captions.">
-      <source src="video/apollo-11.mp4" type="video/mp4">
-    </video>
-    <figcaption>Claude cut this from NASA’s Apollo 11 footage with openmode. <a href="https://github.com/shansabnani/openmode/tree/main/examples/apollo-11">See the edit file.</a></figcaption>
+    <div class="replay" id="replay">
+      <input type="radio" name="replay-step" id="rs-1">
+      <input type="radio" name="replay-step" id="rs-2">
+      <input type="radio" name="replay-step" id="rs-3">
+      <input type="radio" name="replay-step" id="rs-4">
+      <input type="radio" name="replay-step" id="rs-5" checked>
+      <div class="replay-head">
+        <p class="eyebrow">Replay · real commands, real output</p>
+        <button class="replay-again" type="button" hidden>Replay</button>
+      </div>
+      <div class="replay-ask">
+        <p class="eyebrow quiet">The request</p>
+        <p class="ask" id="replay-ask">Cut a 35-second square trailer of Apollo 11 from NASA’s archive footage, with the real countdown audio and captions.</p>
+      </div>
+      <div class="tabs replay-tabs">
+        <label for="rs-1">1 Look</label>
+        <label for="rs-2">2 Edit</label>
+        <label for="rs-3">3 Draft</label>
+        <label for="rs-4">4 Save</label>
+        <label for="rs-5">5 Final</label>
+      </div>
+      <div class="replay-panel" data-step="1">
+        <p class="does">The agent sees the footage as one image.</p>
+        <code class="cmd">openmode look footage/launch.mp4</code>
+        <div class="media">
+          <img src="img/apollo-look.jpg" width="1530" height="612" loading="lazy"
+               alt="Contact sheet of ten timestamped frames from NASA's Apollo 11 launch film: the Saturn V on the pad, the engines lighting, and the rocket rising.">
+        </div>
+        <pre class="out"><span>Video: 84.21s, 1812x1812, 24 fps, h264, 54.1 MB</span><span>No sound.</span></pre>
+      </div>
+      <div class="replay-panel" data-step="2">
+        <p class="does">It writes the edit as a small file.</p>
+        <code class="cmd plain">apollo.json, shortened</code>
+        <div class="media">
+          <pre>{
+  "version": 1,
+  "format": "1:1",
+  "clips": [
+    { "src": "footage/launch.mp4",
+      "start": 20.2, "end": 54.4, "speed": 2 }
+  ],
+  "captions": [
+    { "start": 14.38, "end": 17.32,
+      "text": "Liftoff. We have a liftoff." }
+  ],
+  "endCard": "Cut by Claude with openmode.ai"
+}</pre>
+        </div>
+      </div>
+      <div class="replay-panel" data-step="3">
+        <p class="does">It renders a draft in seconds and checks it.</p>
+        <code class="cmd">openmode render apollo.json --draft</code>
+        <div class="media">
+          <img src="img/apollo-draft-look.jpg" width="1530" height="612" loading="lazy"
+               alt="Contact sheet of ten timestamped frames from the draft: countdown numbers over the rocket, captions during liftoff, then the ladder and the flag on the Moon.">
+        </div>
+        <pre class="out"><span>draft: 35.2s, 360x360, 30 fps, 1.1 MB, with sound</span><span>Rendered in 3.08s (h264_videotoolbox)</span></pre>
+      </div>
+      <div class="replay-panel" data-step="4">
+        <p class="does">Every version is kept, so nothing is lost.</p>
+        <code class="cmd">openmode versions</code>
+        <div class="media">
+          <pre class="out"><span>v1    2026-11-13 17:49  first draft: countdown, liftoff, flag on the Moon</span><span>v2    2026-11-13 17:50  liftoff lands on the word; ladder shot before the flag; quieter mix</span><span>v3    2026-11-13 17:50  vertical version: ladder shot replaces the flag, which the 9:16 crop cut off</span></pre>
+        </div>
+      </div>
+      <div class="replay-panel" data-step="5">
+        <p class="does">Then it renders the finished film.</p>
+        <code class="cmd">openmode render apollo.json --final</code>
+        <div class="media dark">
+          <video controls playsinline muted preload="none" poster="img/apollo-11-poster.jpg" width="720" height="720"
+                 aria-label="A 35-second Apollo 11 trailer: the Saturn V on the pad during the countdown, liftoff, then an astronaut on the ladder and the flag on the Moon, with captions.">
+            <source src="video/apollo-11.mp4" type="video/mp4">
+          </video>
+        </div>
+        <pre class="out"><span>final: 35.2s, 1080x1080, 30 fps, 11.6 MB, with sound</span></pre>
+      </div>
+    </div>
+    <figcaption>How Claude cut a trailer from NASA’s Apollo 11 footage. <a href="https://github.com/shansabnani/openmode/tree/main/examples/apollo-11">See the edit file.</a></figcaption>
   </figure>
 </div>
 
 <section aria-labelledby="how">
   <div class="section-head">
-    <p class="eyebrow" id="how">How it works</p>
+    <p class="eyebrow" id="how">What it gives an agent</p>
   </div>
-  <div class="steps">
-    <article class="step">
-      <div class="text">
-        <p class="eyebrow quiet">1 · Look</p>
-        <h2>The agent sees your footage.</h2>
-        <p>One image of timestamped frames, plus the length, loudness and silent stretches.</p>
-      </div>
-      <figure class="proof">
-        <code class="cmd">openmode look footage/launch.mp4</code>
-        <img src="img/apollo-look.jpg" width="1530" height="612" loading="lazy"
-             alt="Contact sheet of ten timestamped frames from NASA's Apollo 11 launch film: the Saturn V on the pad, the engines lighting, and the rocket rising.">
-        <pre class="out"><span>Video: 84.21s, 1812x1812, 24 fps, h264, 54.1 MB</span><span>No sound.</span></pre>
-      </figure>
+  <div class="columns">
+    <article>
+      <p class="eyebrow quiet">Look</p>
+      <h2>Eyes on the footage.</h2>
+      <p>One image of timestamped frames, plus the length, loudness and silent stretches.</p>
     </article>
-    <article class="step">
-      <div class="text">
-        <p class="eyebrow quiet">2 · Render</p>
-        <h2>It writes the edit as a small file.</h2>
-        <p>Clips, trims, speed, captions and music go in. An MP4 comes out, as a draft in seconds or a final at up to 4K.</p>
-      </div>
-      <div class="proof">
-        <div class="file">
-          <div class="file-head">
-            <code class="cmd">apollo.json, shortened</code>
-          </div>
-          <pre>{
-  "version": 1,
-  "format": "1:1",
-  "clips": [
-    { "src": "footage/launch.mp4", "start": 20.2, "end": 54.4, "speed": 2 }
-  ],
-  "captions": [
-    { "start": 14.38, "end": 17.32, "text": "Liftoff. We have a liftoff." }
-  ],
-  "endCard": "Cut by Claude with openmode.ai"
-}</pre>
-        </div>
-        <div class="run">
-          <code class="cmd">openmode render apollo.json --final</code>
-          <pre class="out"><span>final: 35.2s, 1080x1080, 30 fps, 11.6 MB, with sound</span><span>Rendered in 4.61s (h264_videotoolbox)</span></pre>
-        </div>
-      </div>
+    <article>
+      <p class="eyebrow quiet">Render</p>
+      <h2>An edit file in, an MP4 out.</h2>
+      <p>Clips, trims, speed, captions and music. A draft in seconds, a final at up to 4K.</p>
     </article>
-    <article class="step">
-      <div class="text">
-        <p class="eyebrow quiet">3 · Versions</p>
-        <h2>Every version is kept.</h2>
-        <p>Save, compare and go back. It is undo for video.</p>
-      </div>
-      <div class="proof">
-        <code class="cmd">openmode versions</code>
-        <pre class="out"><span>v1    2026-11-13 17:49  first draft: countdown, liftoff, flag on the Moon</span><span>v2    2026-11-13 17:50  liftoff lands on the word; ladder shot before the flag; quieter mix</span><span>v3    2026-11-13 17:50  vertical version: ladder shot replaces the flag, which the 9:16 crop cut off</span></pre>
-      </div>
+    <article>
+      <p class="eyebrow quiet">Versions</p>
+      <h2>Undo for video.</h2>
+      <p>Save, compare and go back to any version.</p>
     </article>
   </div>
 </section>
@@ -265,5 +300,6 @@
 
 </div>
 <script src="copy.js" defer></script>
+<script src="replay.js" defer></script>
 </body>
 </html>

@@ -15,7 +15,7 @@ Only the look is borrowed. The layout, navigation and every word on the page are
 | One accent, used rarely | `--signal: #ffc500` means "copy the install command": the button in the header and the Copy button in the install box. Also the favicon and text selection |
 | Serif headlines with tight tracking | Newsreader 500, `letter-spacing: -0.02em` to `-0.025em` |
 | Small tracked uppercase sans labels | Inter 12px, `letter-spacing: 0.08em`, uppercase (`.eyebrow`) |
-| Print-like column grid | 1200px page; 5/7 splits; three ruled rows for the steps |
+| Print-like column grid | 1200px page; 5/7 splits; three ruled columns for the abilities |
 | Zero radius, zero shadow | no `border-radius` or `box-shadow` anywhere |
 
 ## Fonts
@@ -29,6 +29,10 @@ The reference uses Plantin and Helvetica Neue, both commercial. The site self-ho
 ## Few words
 
 The page was cut from 777 visible words to about 400 on 14 Nov 2026. Keep it that way: one sentence under each heading, real output instead of description, and longer answers inside the closed questions at the bottom (which also feed the FAQ structured data in the page head).
+
+## The demo
+
+The window at the top of the page replays how the Apollo 11 trailer was made: it types the request (the prompt saved with version 1), then shows five steps, look, edit, draft, save and final, and ends on the film playing muted. The steps are radio tabs, so the demo works without JavaScript and opens on the last step; `site/replay.js` only plays it, once, when the window scrolls into view. It does not run for visitors who ask for reduced motion, and it stops as soon as someone clicks a step. Every panel has the same shape so nothing moves between steps.
 
 ## Real output only
 
