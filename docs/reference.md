@@ -66,7 +66,7 @@ Things to know:
 - A scene needs a camera. If none is active, the first camera in the scene is used; with no camera the render stops and says so.
 - A `.py` scene script runs from its own folder in an empty Blender, then openmode renders whatever scene it left.
 - EEVEE needs a GPU. On a server without one, use `--renderer cycles`.
-- Tested with Blender 5.3. The MCP tool is `render_blender`, with the same options.
+- Tested with Blender 5.3 on macOS and Blender 5.0 on Linux. The MCP tool is `render_blender`, with the same options.
 
 ## Versions
 
