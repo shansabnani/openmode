@@ -187,13 +187,154 @@ p {
   grid-row: 1 / span 3;
 }
 
-.shot video {
-  display: block;
-  width: 100%;
-  height: auto;
-  aspect-ratio: 1 / 1;
-  background: var(--ink);
+/* The demo: a replay of the real session, one step at a time. Radio inputs
+   switch the panels, so it works without JavaScript; replay.js only plays it. */
+.replay {
+  background: var(--white);
   border: 1px solid var(--ink);
+}
+.replay input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.replay-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 38px;
+  padding: 0 14px;
+  border-bottom: 1px solid var(--ink);
+}
+.replay-again {
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: transparent;
+  border: 0;
+  padding: 4px 0;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.replay-ask {
+  padding: 12px 14px 14px;
+  border-bottom: 1px solid var(--rule);
+}
+.ask {
+  font-size: 18px;
+  line-height: 1.35;
+  margin-top: 6px;
+}
+.ask.typing::after {
+  content: "";
+  display: inline-block;
+  width: 1px;
+  height: 1em;
+  margin-left: 2px;
+  vertical-align: -0.15em;
+  background: var(--ink);
+}
+.replay-tabs {
+  padding: 0 14px;
+  gap: 0 18px;
+  margin-bottom: 0;
+  border-bottom: 1px solid var(--rule);
+}
+#rs-1:checked ~ .tabs label[for="rs-1"],
+#rs-2:checked ~ .tabs label[for="rs-2"],
+#rs-3:checked ~ .tabs label[for="rs-3"],
+#rs-4:checked ~ .tabs label[for="rs-4"],
+#rs-5:checked ~ .tabs label[for="rs-5"] {
+  color: var(--ink);
+  border-bottom-color: var(--ink);
+}
+#rs-1:focus-visible ~ .tabs label[for="rs-1"],
+#rs-2:focus-visible ~ .tabs label[for="rs-2"],
+#rs-3:focus-visible ~ .tabs label[for="rs-3"],
+#rs-4:focus-visible ~ .tabs label[for="rs-4"],
+#rs-5:focus-visible ~ .tabs label[for="rs-5"] {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+/* Every panel has the same shape, so the page does not jump between steps. */
+.replay-panel {
+  display: none;
+  flex-direction: column;
+  aspect-ratio: 5 / 4;
+  padding: 14px;
+}
+#rs-1:checked ~ .replay-panel[data-step="1"],
+#rs-2:checked ~ .replay-panel[data-step="2"],
+#rs-3:checked ~ .replay-panel[data-step="3"],
+#rs-4:checked ~ .replay-panel[data-step="4"],
+#rs-5:checked ~ .replay-panel[data-step="5"] {
+  display: flex;
+}
+/* While the request is being typed the steps wait, without moving the layout. */
+.replay.asking .replay-panel {
+  visibility: hidden;
+}
+#replay.asking .replay-tabs label[for] {
+  color: var(--caption);
+  border-bottom-color: transparent;
+}
+.replay-panel .does {
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+.replay-panel .cmd,
+.replay-panel .out,
+.replay-panel .media pre {
+  font-size: 12px;
+}
+.cmd.plain::before {
+  content: none;
+}
+.replay-panel .media {
+  flex: 1;
+  min-height: 0;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.replay-panel .media.dark {
+  background: var(--ink);
+}
+.replay-panel .media img,
+.replay-panel .media video {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+}
+.replay-panel .media img {
+  border: 1px solid var(--ink);
+}
+.replay-panel .media video {
+  height: 100%;
+  aspect-ratio: 1 / 1;
+}
+.replay-panel .media pre {
+  align-self: stretch;
+  width: 100%;
+  overflow: auto;
+}
+.replay .replay-panel > .out {
+  margin-top: 10px;
+  padding: 0;
+  border-bottom: 0;
+}
+.replay .replay-panel .media .out {
+  align-self: flex-start;
+  padding: 0;
+  border-bottom: 0;
 }
 .hero .shot {
   max-width: 560px;
@@ -410,73 +551,26 @@ h2 {
   text-wrap: balance;
 }
 
-/* How it works: three steps, each a short claim beside its real output. */
-.step {
+/* Three abilities set as newspaper columns: rules between, no boxes. */
+.columns {
   display: grid;
-  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-  gap: 56px;
-  align-items: start;
-  padding: 32px 0;
-  border-top: 1px solid var(--rule);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
-.step:first-child {
-  padding-top: 0;
-  border-top: 0;
+.columns article {
+  padding: 0 24px;
+  border-left: 1px solid var(--rule);
 }
-.step:last-child {
-  padding-bottom: 0;
+.columns article:first-child {
+  padding-left: 0;
+  border-left: 0;
 }
-.step h2 {
+.columns article:last-child {
+  padding-right: 0;
+}
+.columns h2 {
   margin-top: 10px;
-}
-.step .text p:not(.eyebrow) {
-  max-width: 24em;
-}
-.step .proof img {
-  margin-top: 10px;
-  border: 1px solid var(--ink);
-}
-.step .file + .run {
-  border-top: 0;
-  margin-top: 4px;
-}
-.run {
-  margin-top: 20px;
-  padding-top: 12px;
-  border-top: 1px solid var(--rule);
-}
-.run .out,
-.step .proof > .out {
-  margin-top: 4px;
-}
-.step .proof > .out {
-  padding: 8px 0 0;
-  border-bottom: 0;
 }
 
-.file {
-  background: var(--white);
-  border: 1px solid var(--ink);
-}
-.file-head {
-  display: flex;
-  align-items: stretch;
-  justify-content: space-between;
-  border-bottom: 1px solid var(--ink);
-}
-.file-head .cmd {
-  padding: 9px 14px;
-}
-.file-head .cmd::before {
-  content: none;
-}
-.file-head .copy {
-  padding: 0 14px;
-}
-.file pre {
-  padding: 14px;
-  overflow-x: auto;
-}
 /* MCP tools: a plain ruled list. */
 .tools {
   display: grid;
@@ -600,7 +694,6 @@ footer a:hover {
     --gutter: 20px;
   }
   .hero,
-  .step,
   .tools {
     grid-template-columns: minmax(0, 1fr);
     gap: 36px;
@@ -626,9 +719,22 @@ footer a:hover {
   .hero .shot {
     max-width: none;
   }
-  .step {
-    gap: 20px;
-    padding: 28px 0;
+  .columns {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .columns article,
+  .columns article:first-child,
+  .columns article:last-child {
+    padding: 20px 0;
+    border-left: 0;
+    border-top: 1px solid var(--rule);
+  }
+  .columns article:first-child {
+    padding-top: 0;
+    border-top: 0;
+  }
+  .columns article:last-child {
+    padding-bottom: 0;
   }
   section {
     padding-bottom: 48px;
@@ -647,6 +753,16 @@ footer a:hover {
   }
   .top .cta .wide {
     display: none;
+  }
+  .replay-panel {
+    aspect-ratio: 4 / 5;
+  }
+  .replay-tabs {
+    gap: 0 12px;
+  }
+  .ask,
+  .replay-panel .does {
+    font-size: 17px;
   }
   .top .cta {
     padding: 9px 12px;
