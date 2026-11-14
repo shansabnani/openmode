@@ -10,6 +10,7 @@ export {
   type EditRenderRequest,
 } from "./engines/edit/index.js";
 export { renderFrames, findSequence, type FramesRenderRequest } from "./engines/frames/index.js";
+export { renderBlender, detectBlender, type BlenderRenderRequest, type Renderer } from "./engines/blender/index.js";
 export {
   saveVersion,
   listVersions,

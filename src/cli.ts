@@ -4,6 +4,7 @@ import { resolve } from "node:path";
 import { parseArgs } from "node:util";
 import { status } from "./core/status.js";
 import { validateEdit } from "./engines/edit/index.js";
+import type { Renderer } from "./engines/blender/index.js";
 import { engines, render } from "./engines/index.js";
 import { look } from "./look/index.js";
 import { EDIT_GUIDE, VERSION, runStdioServer } from "./mcp.js";
@@ -15,13 +16,16 @@ const HELP = `openmode ${VERSION} — video rendering and editing for coding age
       [--frames 12] [--start s] [--end s] [--at s] [--out sheet.jpg] [--quick]
   openmode render <edit.json|frames-dir>     Make the MP4
       [--draft | --final] [--out film.mp4] [--fps 24] [--audio music.wav] [--loudness -14]
+  openmode render <scene.blend|scene.py>     Render a Blender scene with your Blender
+      [--draft | --final] [--range 1-48] [--step 2] [--renderer cycles|eevee|workbench]
+      [--samples 32] [--audio music.wav] [--scripts] [--out film.mp4]
   openmode check <edit.json>                 Validate an edit without rendering
   openmode save [-m "what changed"] [--prompt "..."] [--model name]
   openmode versions                          List saved versions
   openmode restore <v3>                      Go back (recorded as a new version)
   openmode diff <v2> [v3|current]            What changed between versions
   openmode schema                            The edit file format
-  openmode status                            Check ffmpeg and features
+  openmode status                            Check ffmpeg, Blender and features
   openmode init                              Add openmode notes to AGENTS.md
   openmode mcp                               Run the MCP server (stdio)
 
@@ -37,7 +41,8 @@ Use openmode for any video task in this folder (cut, trim, caption, combine, add
 
 - See footage or a render: \`npx -y openmode look <file> --out sheet.jpg\`, then read the sheet image and the printed facts (length, loudness, silences, black frames).
 - Edit: write an edit file (\`npx -y openmode schema\` shows the format), then \`npx -y openmode render edit.json --draft\`, look at the result, fix, and finish with \`--final\`.
-- Frames from Blender or a browser capture: \`npx -y openmode render <frames-dir> --fps 24 --audio music.wav\`.
+- 3D: \`npx -y openmode render scene.blend --draft\` (or a Python scene script, \`scene.py\`) renders a Blender scene with the Blender on this machine. Look at the draft, then \`--final\`.
+- Frames from another renderer or a browser capture: \`npx -y openmode render <frames-dir> --fps 24 --audio music.wav\`.
 - Keep every version: \`npx -y openmode save -m "what changed" --prompt "<the request>"\`. \`openmode versions\`, \`openmode diff v1 v2\` and \`openmode restore v1\` are safe: restore never loses work.
 - Always look at a draft before rendering final, and before telling the user it is done.
 `;
@@ -93,6 +98,11 @@ async function main(): Promise<void> {
       model: { type: "string" },
       dir: { type: "string" },
       force: { type: "boolean" },
+      range: { type: "string" },
+      step: { type: "string" },
+      renderer: { type: "string" },
+      samples: { type: "string" },
+      scripts: { type: "boolean" },
     },
   });
   const asJson = Boolean(values.json);
@@ -144,6 +154,15 @@ async function main(): Promise<void> {
         fps: num(values.fps, "fps"),
         audio: values.audio,
         loudness: num(values.loudness, "loudness"),
+        range: values.range,
+        step: num(values.step, "step"),
+        renderer: values.renderer as Renderer | undefined,
+        samples: num(values.samples, "samples"),
+        allowScripts: values.scripts,
+        // Long Blender renders say where they are, on stderr so --json stays clean.
+        onProgress: (done, total) => {
+          if (process.stderr.isTTY) process.stderr.write(`\rframe ${done}/${total}${done === total ? "\n" : ""}`);
+        },
       });
       print(asJson, result, () =>
         [
@@ -228,6 +247,9 @@ async function main(): Promise<void> {
           result.ffmpeg
             ? `ffmpeg ${result.ffmpeg.version} at ${result.ffmpeg.path} (encoder ${result.ffmpeg.encoder}, captions ${result.ffmpeg.captions ? "yes" : "no"})`
             : "ffmpeg: not found",
+          result.blender
+            ? `blender ${result.blender.version} at ${result.blender.path}`
+            : "blender: not found (only needed to render .blend files and Blender scripts)",
           ...engines.map((engine) => `engine ${engine.name}: ${engine.summary}`),
           ...result.problems,
         ].join("\n"),

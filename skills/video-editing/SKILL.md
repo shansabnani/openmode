@@ -1,13 +1,13 @@
 ---
 name: video-editing
-description: Edit and render video with openmode, a local ffmpeg-based tool. Use whenever the user wants to edit, cut, trim, shorten, join or combine video clips, remove silences or mistakes, add captions, subtitles, titles, music or a voiceover, change speed, make a vertical (9:16) or square version, turn images or rendered frames (Blender, browser capture) into an MP4, review or check a video, or keep and restore versions of a video project.
+description: Edit and render video with openmode, a local ffmpeg-based tool. Use whenever the user wants to edit, cut, trim, shorten, join or combine video clips, remove silences or mistakes, add captions, subtitles, titles, music or a voiceover, change speed, make a vertical (9:16) or square version, render a Blender scene (.blend file or bpy Python script) to video, turn images or rendered frames into an MP4, review or check a video, or keep and restore versions of a video project.
 ---
 
 # Video editing with openmode
 
 openmode lets you edit video the way you edit code: look at it, write a small edit file, render, look again, save a version. It runs locally on the user's ffmpeg. Nothing is uploaded.
 
-If the openmode MCP tools (`look`, `render_edit`, `render_frames`, `versions`, `edit_schema`, `status`) are available, use them. Otherwise run the same things with `npx -y openmode <command>`; add `--json` for structured output.
+If the openmode MCP tools (`look`, `render_edit`, `render_frames`, `render_blender`, `versions`, `edit_schema`, `status`) are available, use them. Otherwise run the same things with `npx -y openmode <command>`; add `--json` for structured output.
 
 ## The loop
 
@@ -52,9 +52,19 @@ Never tell the user a video is done without having looked at the render.
 - **Vertical version of landscape footage**: `"format": "9:16", "fit": "cover"`.
 - **Captions**: `caption` on each clip, or timed entries in `captions`. Keep each to one or two short lines.
 - **Music under speech**: an `audio` track with `volume` around 0.15 to 0.3 and a `fadeOut`.
-- **Frames to film** (Blender, browser capture): `render_frames` with the folder, `fps` and optional `audio` (`npx -y openmode render frames/ --fps 24 --audio music.wav`). Missing frames are reported; render them before trying again.
+- **Frames to film** (browser capture, another renderer): `render_frames` with the folder, `fps` and optional `audio` (`npx -y openmode render frames/ --fps 24 --audio music.wav`). Missing frames are reported; render them before trying again.
 - **Go back**: `versions` action `list`, then `restore` with the id. Restoring is safe: unsaved work is saved first.
+
+## 3D with Blender
+
+`render_blender` (`npx -y openmode render scene.blend --draft`) renders a `.blend` file, or a `.py` script that builds a scene with `bpy`, using the Blender on this machine.
+
+1. Render a **draft** first. It is 360p, uses at most 16 samples and may skip frames, so it comes back in seconds.
+2. **Look** at the draft: is the subject in frame, lit, and moving as intended?
+3. Fix the scene or script, draft again, then render **final** (the scene's own size and samples).
+
+Useful options: `range` ("1-48"), `step` (every Nth frame), `renderer` (`cycles`, `eevee`, `workbench`), `samples`, `audio`. A scene needs a camera. On a machine with no GPU use `renderer: "cycles"`. To cut the result together with other footage, use the rendered MP4 as a clip in an edit file.
 
 ## If something fails
 
-Call `status` (`npx -y openmode status`). It reports whether ffmpeg is installed and whether captions are supported, with the install command if not.
+Call `status` (`npx -y openmode status`). It reports whether ffmpeg is installed, whether Blender is, and whether captions are supported, with the install command if not.

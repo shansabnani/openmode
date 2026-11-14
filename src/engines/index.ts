@@ -2,6 +2,7 @@ import { statSync } from "node:fs";
 import { extname, resolve } from "node:path";
 import type { Quality } from "../core/ffmpeg.js";
 import type { RenderResult } from "../core/output.js";
+import { renderBlender, type Renderer } from "./blender/index.js";
 import { renderEdit } from "./edit/index.js";
 import { renderFrames } from "./frames/index.js";
 
@@ -12,10 +13,22 @@ export type RenderOptions = {
   fps?: number;
   audio?: string;
   loudness?: number;
+  /** Blender: frames to render, for example "1-48". */
+  range?: string;
+  /** Blender: render every Nth frame. */
+  step?: number;
+  /** Blender: cycles, eevee or workbench. */
+  renderer?: Renderer;
+  /** Blender: samples per pixel. */
+  samples?: number;
+  /** Blender: let Python inside the .blend run. */
+  allowScripts?: boolean;
+  /** Blender: called after each frame. */
+  onProgress?: (done: number, total: number) => void;
 };
 
 /**
- * An engine turns one kind of input into an MP4. To add one (Blender, HTML
+ * An engine turns one kind of input into an MP4. To add one (HTML
  * compositions, a model API), create src/engines/<name>/ and list it here:
  * the CLI picks it up through `accepts`, and the MCP server through its tool.
  */
@@ -47,6 +60,25 @@ export const engines: Engine[] = [
         loudness: options.loudness,
         quality: options.quality,
         out: options.out,
+      }),
+  },
+  {
+    name: "blender",
+    summary: "A Blender file (.blend) or Blender Python scene script (.py) → MP4, with your own Blender",
+    accepts: (input, isDir) => !isDir && [".blend", ".py"].includes(extname(input).toLowerCase()),
+    render: (input, options) =>
+      renderBlender({
+        file: input,
+        quality: options.quality,
+        range: options.range,
+        step: options.step,
+        renderer: options.renderer,
+        samples: options.samples,
+        audio: options.audio,
+        loudness: options.loudness,
+        allowScripts: options.allowScripts,
+        out: options.out,
+        onProgress: options.onProgress,
       }),
   },
 ];

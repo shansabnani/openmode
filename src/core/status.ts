@@ -1,8 +1,11 @@
+import { blenderVersion, detectBlender } from "../engines/blender/index.js";
 import { detectFfmpeg, detectFfprobe, ffmpegFilters, ffmpegVersion, pickEncoder } from "./ffmpeg.js";
 
 export type Status = {
   ready: boolean;
   ffmpeg?: { path: string; version: string; encoder: string; captions: boolean };
+  /** Only needed to render .blend files and Blender scene scripts. */
+  blender?: { path: string; version: string };
   problems: string[];
 };
 
@@ -26,5 +29,12 @@ export async function status(): Promise<Status> {
   } catch (error) {
     problems.push((error as Error).message);
   }
-  return { ready: Boolean(ffmpeg), ffmpeg, problems };
+  let blender: Status["blender"];
+  try {
+    const path = detectBlender();
+    blender = { path, version: await blenderVersion(path) };
+  } catch {
+    // Blender is optional: everything except the Blender engine works without it.
+  }
+  return { ready: Boolean(ffmpeg), ffmpeg, blender, problems };
 }

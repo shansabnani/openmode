@@ -4,7 +4,7 @@
 [![CI](https://github.com/shansabnani/openmode/actions/workflows/ci.yml/badge.svg)](https://github.com/shansabnani/openmode/actions/workflows/ci.yml)
 [![MIT](https://img.shields.io/badge/license-MIT-black)](./LICENSE)
 
-**Video editing and rendering for coding agents.** An open-source CLI and MCP server that lets Claude Code, Codex and Cursor look at footage, cut it, caption it and render an MP4. It runs on your machine with your own ffmpeg: no account, no upload, no API key, no cost.
+**Video editing and rendering for coding agents.** An open-source CLI and MCP server that lets Claude Code, Codex and Cursor look at footage, cut it, caption it, render Blender scenes and produce an MP4. It runs on your machine with your own ffmpeg and Blender: no account, no upload, no API key, no cost.
 
 ```bash
 claude mcp add openmode -- npx -y openmode mcp
@@ -20,13 +20,14 @@ Claude cut this Apollo 11 trailer from NASA footage with openmode. [Watch the re
 
 - **Look.** See a video as one image of timestamped frames, plus its length, loudness, silent stretches and black frames.
 - **Render.** Turn a small edit file (clips, trims, speed, fades, captions, music) or a folder of frames into an MP4. Drafts take seconds; finals go up to 4K.
+- **Render 3D.** Turn a Blender file or a Python scene script into an MP4 with the Blender on your machine: a small, fast draft first, then full quality.
 - **Keep versions.** Save, compare and restore the whole project, like undo for video.
 
-Use it when you ask an agent to cut, trim, caption, combine, speed up, add music to, review or render video.
+Use it when you ask an agent to cut, trim, caption, combine, speed up, add music to, review or render video, or to render a Blender scene.
 
 ## Install
 
-Needs [Node.js](https://nodejs.org) 20 or newer and [ffmpeg](https://ffmpeg.org).
+Needs [Node.js](https://nodejs.org) 20 or newer and [ffmpeg](https://ffmpeg.org). [Blender](https://www.blender.org) is only needed for 3D scenes.
 
 | Agent | Command |
 |---|---|
@@ -87,6 +88,16 @@ A small JSON file next to your footage. Times are in seconds.
 
 `npx -y openmode schema` prints every field. The [reference](docs/reference.md) has the full table and recipes.
 
+## Blender scenes
+
+```bash
+npx -y openmode render scene.blend --draft      # 360p, few samples, seconds
+npx -y openmode look renders/scene-draft.mp4   # check it
+npx -y openmode render scene.blend --final      # the scene's own size and samples
+```
+
+A `.py` script that builds the scene with `bpy` works the same way; [`examples/turntable`](examples/turntable) has one. Options: `--range 1-48`, `--step 2`, `--renderer cycles`, `--samples 32`, `--audio music.wav`. Details are in the [reference](docs/reference.md#blender-scenes).
+
 ## MCP tools
 
 | Tool | Use |
@@ -94,13 +105,14 @@ A small JSON file next to your footage. Times are in seconds.
 | `look` | See a video, image or frames folder as one image, with its facts. |
 | `render_edit` | Turn an edit file into an MP4, or check it without rendering. |
 | `render_frames` | Turn numbered frames and a soundtrack into an MP4. |
+| `render_blender` | Render a `.blend` file or a Python scene script with your Blender. |
 | `versions` | Save, list, restore and compare. |
 | `edit_schema` | The edit file format, with an example. |
-| `status` | Check that ffmpeg is ready. |
+| `status` | Check that ffmpeg is ready and whether Blender is installed. |
 
 ## Roadmap
 
-Blender engine, HTML ([HyperFrames](https://github.com/heygen-com/hyperframes)) engine, rendering on your own GPUs, captions from speech, and shareable kits of scenes and characters.
+HTML ([HyperFrames](https://github.com/heygen-com/hyperframes)) engine, rendering Blender scenes on your own GPUs, captions from speech, and shareable kits of Blender scenes and characters.
 
 ## Contribute
 

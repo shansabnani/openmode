@@ -34,4 +34,4 @@ An engine turns one kind of input into an MP4.
 - **Never lose work.** Anything that overwrites or deletes user files saves them first.
 - **Keep the tool list small.** Every MCP tool costs tokens in every conversation. Extend an existing tool before adding one.
 - **No new dependencies without a reason.** The runtime dependencies are the MCP SDK and zod.
-- Licences: MIT-compatible code only. openmode calls ffmpeg (and later Blender) as separate programs and never bundles them.
+- Licences: MIT-compatible code only. openmode calls ffmpeg and Blender as separate programs and never bundles them.
